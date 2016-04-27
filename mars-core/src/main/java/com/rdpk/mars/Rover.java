@@ -4,7 +4,7 @@ import com.rdpk.mars.exceptions.IllegalOperation;
 import com.rdpk.mars.exceptions.LocationConflict;
 import com.rdpk.mars.exceptions.RoverAlreadyLanded;
 import com.rdpk.mars.exceptions.UnknownLocation;
-import lombok.Data;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,18 +12,21 @@ import java.util.List;
 /**
  * A Rover to explore Mars
  */
-@Data
+@Getter
 public class Rover {
 
-	boolean isLanded ;
-	Direction direction ;
-	Plateau plateau ;
-	Location location ;
-	List<Location> pastLocations ;
+	private final String id;
+    private final List<Location> pastLocations ;
 
-	public Rover() {
-		this.isLanded =false ;
+    private boolean isLanded ;
+    private Direction direction ;
+    private Plateau plateau ;
+    private Location location ;
+
+	public Rover(String id) {
+        this.id = id;
 		this.pastLocations = new ArrayList<>() ;
+        this.isLanded = false ;
 	}
 
 	/**
@@ -113,5 +116,24 @@ public class Rover {
 		// System.out.println("Moved from " + pastLocations.get(pastLocations.size()-1) + " to " + location);
 
 	}
+
+    /**
+     * Based only on it's ID field
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Rover rover = (Rover) o;
+        return id.equals(rover.id);
+    }
+
+    /**
+     * Based only on it's ID field
+     */
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 
 }

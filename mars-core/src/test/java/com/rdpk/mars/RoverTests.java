@@ -8,24 +8,26 @@ import static org.junit.Assert.assertEquals;
 
 public class RoverTests {
 
+    final String roverId = "rover1";
+
 	@Test
 	public void after_creation_it_is_not_landed() {
-		Rover rover = new Rover() ;
-		assertFalse(rover.isLanded); ;
+		Rover rover = new Rover(roverId) ;
+		assertFalse(rover.isLanded()); ;
 	}
 
 	@Test
 	public void after_land_it_is_landed() {
-		Rover rover = new Rover() ;
-		Plateau plateau = new Plateau(5, 5) ;
+		Rover rover = new Rover(roverId) ;
+		Plateau plateau = new Plateau(roverId, 5, 5) ;
 		rover.land(plateau, new Location(1, 2), Direction.NORTH) ;
-		assertTrue(rover.isLanded) ;
+		assertTrue(rover.isLanded()) ;
 	}
 
 	@Test
 	public void after_landed_location_must_match() {
-		Rover rover = new Rover() ;
-		Plateau plateau = new Plateau(5, 5) ;
+		Rover rover = new Rover(roverId) ;
+		Plateau plateau = new Plateau(roverId, 5, 5) ;
 		Location location = new Location(1, 2) ;
 		rover.land(plateau, location, Direction.NORTH) ;
 		assertEquals(rover.getLocation(), location) ;
@@ -33,8 +35,8 @@ public class RoverTests {
 
 	@Test
 	public void after_landed_direction_must_match() {
-		Rover rover = new Rover() ;
-		Plateau plateau = new Plateau(5, 5) ;
+		Rover rover = new Rover(roverId) ;
+		Plateau plateau = new Plateau(roverId, 5, 5) ;
 		Location location = new Location(1, 2) ;
 		rover.land(plateau, location, Direction.NORTH) ;
 		assertEquals(rover.getDirection(), Direction.NORTH) ;
@@ -43,8 +45,8 @@ public class RoverTests {
 	@Test
 	public void move_to_north_twice_then_turn_to_right_and_move() {
 
-		Rover rover = new Rover() ;
-		Plateau plateau = new Plateau(5, 5) ;
+		Rover rover = new Rover(roverId) ;
+		Plateau plateau = new Plateau(roverId, 5, 5) ;
 		Location initialLocation = new Location(0, 0) ;
 		rover.land(plateau, initialLocation, Direction.NORTH) ;
 		Location expectedLocation =  new Location(1, 2) ;
@@ -66,8 +68,8 @@ public class RoverTests {
 		// 1 2 N
 		// LMLMLMLMM
 
-		Rover rover = new Rover() ;
-		Plateau plateau = new Plateau(5, 5) ;
+		Rover rover = new Rover(roverId) ;
+		Plateau plateau = new Plateau(roverId, 5, 5) ;
 		Location initialLocation = new Location(1, 2) ;
 		rover.land(plateau, initialLocation, Direction.NORTH) ;
 		Location expectedLocation =  new Location(1, 3) ; // 1 3 N
@@ -98,8 +100,8 @@ public class RoverTests {
 		// 3 3 E
 		// MMRMMRMRRM
 
-		Rover rover = new Rover() ;
-		Plateau plateau = new Plateau(5, 5) ;
+		Rover rover = new Rover(roverId) ;
+		Plateau plateau = new Plateau(roverId, 5, 5) ;
 		Location initialLocation = new Location(3, 3) ;
 		Location expectedLocation =  new Location(5, 1) ; // 5 1 E
 

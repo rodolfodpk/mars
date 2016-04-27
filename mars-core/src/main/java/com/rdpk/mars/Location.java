@@ -5,7 +5,8 @@ import lombok.Value;
 /**
  * A location point given by x and y coordinates.
  */
-@Value public class Location {
+@Value
+public class Location {
 
 	private final int x;
 	private final int y;

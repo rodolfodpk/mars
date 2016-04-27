@@ -2,6 +2,7 @@ package com.rdpk.mars;
 
 import com.rdpk.mars.exceptions.LocationConflict;
 import com.rdpk.mars.exceptions.UnknownLocation;
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 import java.util.LinkedHashSet;
@@ -11,14 +12,17 @@ import java.util.Set;
  * A Plateau to be explored by the Rovers squad
  */
 @Value
+@EqualsAndHashCode(exclude={"rovers"})
 public class Plateau {
 
+	String id;
 	Set<Rover> rovers;
 	int xSize;
 	int ySize;
 
-	public Plateau(int xSize, int ySize) {
-		if (xSize < 2 || ySize < 2) {
+	public Plateau(String id, int xSize, int ySize) {
+        this.id = id;
+        if (xSize < 2 || ySize < 2) {
 			throw new IllegalArgumentException("Invalid plateau dimension. x, y must be at least 2, 2 ") ;
 		}
 		this.rovers = new LinkedHashSet<>();
