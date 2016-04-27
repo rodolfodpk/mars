@@ -6,7 +6,7 @@ import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
-public class RoverTests {
+public class RoverTest {
 
     final String roverId = "rover1";
 
