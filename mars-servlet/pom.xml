@@ -19,6 +19,11 @@
 	<dependencies>
 
 		<dependency>
+			<groupId>com.rdpk</groupId>
+			<artifactId>mars-core</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
@@ -49,6 +54,7 @@
 			<artifactId>powermock-api-mockito</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 
 	</dependencies>
 
