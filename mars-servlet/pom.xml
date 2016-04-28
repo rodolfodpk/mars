@@ -9,10 +9,12 @@
 	</parent>
 
 	<artifactId>mars-servlet</artifactId>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	
 	<properties>
         <servlet.version>3.1.0</servlet.version>
+        <mvn.plugin.war.version>2.4</mvn.plugin.war.version>
+		<camel.version>2.17.0</camel.version>
 	</properties>
 
 
@@ -46,6 +48,30 @@
 			<scope>provided</scope>	
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-core</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-servlet</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-jackson</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-swagger-java</artifactId>
+			<version>${camel.version}</version>
+		</dependency>
+
 		<!-- test -->
 
 		<dependency>
@@ -75,6 +101,14 @@
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
                 <version>9.3.7.v20160115</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${mvn.plugin.war.version}</version>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                </configuration>
             </plugin>
         </plugins>
     </build>
