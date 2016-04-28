@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 import java.util.LinkedHashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -21,8 +22,8 @@ public class Plateau {
 	int ySize;
 
 	public Plateau(String id, int xSize, int ySize) {
-        this.id = id;
-        if (xSize < 2 || ySize < 2) {
+		this.id = id;
+		if (xSize < 2 || ySize < 2) {
 			throw new IllegalArgumentException("Invalid plateau dimension. x, y must be at least 2, 2 ") ;
 		}
 		this.rovers = new LinkedHashSet<>();
@@ -60,6 +61,20 @@ public class Plateau {
 			}
 		}
 		return false ;
+	}
+
+	/**
+	 * Check if this location has any rover e return it
+	 * @param location
+	 * @return rover
+	 */
+	public Optional<Rover> getRoverAt(Location location) {
+		for (Rover roverOverHere : rovers) {
+			if (roverOverHere.getLocation().equals(location)) {
+				return Optional.of(roverOverHere) ;
+			}
+		}
+		return Optional.empty();
 	}
 
 	/**

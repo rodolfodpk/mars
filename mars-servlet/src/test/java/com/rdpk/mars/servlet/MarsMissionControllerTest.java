@@ -1,5 +1,6 @@
 package com.rdpk.mars.servlet;
 
+import com.rdpk.mars.Location;
 import com.rdpk.mars.exceptions.IllegalOperation;
 import com.rdpk.mars.servet.MarsMissionController;
 import org.junit.Test;
@@ -56,11 +57,30 @@ public class MarsMissionControllerTest {
         o.executeCommand("3 3 E") ;
         o.executeCommand("MMRMMRMRRM") ;
 
-        System.out.println(o.getStatus());
-
         // expected output
         assertEquals(o.getStatus(), "1 3 N\n5 1 E\n");
 
+        // also asserts there are 2 rovers
+        assertEquals(o.getPlateau().getRovers().size(), 2);
+
+    }
+
+    @Test
+    public void io_test_one_rover_moving() {
+        MarsMissionController o = new MarsMissionController() ;
+        o.executeCommand("5 10") ;
+        o.executeCommand("1 2 N") ;
+        o.executeCommand("LMLMLMLMM") ;
+        assertEquals(o.getStatus(), "1 3 N\n");
+    }
+
+    @Test
+    public void io_test_one_rover_without_moving() {
+        MarsMissionController o = new MarsMissionController() ;
+        o.executeCommand("5 10") ;
+        o.executeCommand("1 2 N") ;
+        assertTrue(o.getPlateau().isLocationBusy(new Location(1, 2))) ;
+        assertEquals(o.getStatus(), "1 2 N\n");
     }
 
 }

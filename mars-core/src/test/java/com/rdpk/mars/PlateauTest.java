@@ -51,14 +51,14 @@ public class PlateauTest {
 	}
 	
 	@Test(expected = UnknownLocation.class)
-	public void it_must_fail_on_unknown_location() {
+	public void it_must_fail_on_unknown_location_outside() {
 		
 		Plateau plateau = new Plateau(id, 5, 5);
 		Location location = new Location(6, 0);
 		Rover rover1 = new Rover(id);
 		rover1.land(plateau, location, Direction.NORTH);
 	}
-	
+
 	@Test(expected = IllegalArgumentException.class)
 	public void it_should_fail_on_invalid_dimension() {
 		
