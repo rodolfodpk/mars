@@ -1,5 +1,6 @@
 package com.rdpk.mars.web;
 
+import com.rdpk.mars.MarsMissionController;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
 
@@ -14,7 +15,7 @@ public class MarsMissionCtxListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         this.camel = new DefaultCamelContext();
         try {
-            camel.addRoutes(new MarsMissionRestRoute());
+            camel.addRoutes(new MarsMissionRestRoute(new MarsMissionController()));
             camel.start();
         } catch (Exception e) {
             e.printStackTrace();
