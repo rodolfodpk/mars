@@ -1,4 +1,4 @@
-package com.rdpk.mars.servet;
+package com.rdpk.mars.servlet;
 
 import com.rdpk.mars.Plateau;
 import com.rdpk.mars.Rover;

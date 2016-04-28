@@ -2,7 +2,6 @@ package com.rdpk.mars.servlet;
 
 import com.rdpk.mars.Location;
 import com.rdpk.mars.exceptions.IllegalOperation;
-import com.rdpk.mars.servet.MarsMissionController;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
