@@ -1,12 +1,11 @@
 package com.rdpk.mars.web;
 
 import com.rdpk.mars.MarsMissionController;
-import com.rdpk.mars.Plateau;
 import com.rdpk.mars.web.representations.PlateauRepresentation;
 import com.rdpk.mars.web.representations.PlateauRepresentationFunction;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiParam;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
