@@ -20,7 +20,8 @@ public class Rover {
 
     private boolean isLanded ;
     private Direction direction ;
-    private Plateau plateau ;
+
+	private Plateau plateau ;
     private Location location ;
 
 	public Rover(String id) {
