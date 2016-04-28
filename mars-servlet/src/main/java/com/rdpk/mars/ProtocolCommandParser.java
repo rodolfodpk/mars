@@ -1,9 +1,5 @@
-package com.rdpk.mars.servlet;
+package com.rdpk.mars;
 
-import com.rdpk.mars.Direction;
-import com.rdpk.mars.Location;
-import com.rdpk.mars.Plateau;
-import com.rdpk.mars.Rover;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -11,6 +7,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * A parser for protocol commands
+ */
 public class ProtocolCommandParser {
 
     private Pattern plateauCreation = Pattern.compile("(\\d*)\\s(\\d*)");

@@ -1,6 +1,7 @@
-package com.rdpk.mars.servlet;
+package com.rdpk.mars.web;
 
 import com.rdpk.mars.Location;
+import com.rdpk.mars.MarsMissionController;
 import com.rdpk.mars.exceptions.IllegalOperation;
 import org.junit.Test;
 

@@ -1,9 +1,6 @@
-package com.rdpk.mars.servlet;
+package com.rdpk.mars.web;
 
-import com.rdpk.mars.Direction;
-import com.rdpk.mars.Location;
-import com.rdpk.mars.Plateau;
-import com.rdpk.mars.Rover;
+import com.rdpk.mars.*;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertFalse;

@@ -1,7 +1,5 @@
-package com.rdpk.mars.servlet;
+package com.rdpk.mars;
 
-import com.rdpk.mars.Plateau;
-import com.rdpk.mars.Rover;
 import com.rdpk.mars.exceptions.IllegalOperation;
 import lombok.Getter;
 import org.slf4j.Logger;

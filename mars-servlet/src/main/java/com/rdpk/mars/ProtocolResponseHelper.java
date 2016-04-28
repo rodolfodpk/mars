@@ -1,9 +1,10 @@
-package com.rdpk.mars.servlet;
+package com.rdpk.mars;
 
-import com.rdpk.mars.Plateau;
-import com.rdpk.mars.Rover;
 import lombok.Value;
 
+/**
+ * Renders the status in the protocol format
+ */
 @Value
 public class ProtocolResponseHelper {
 
