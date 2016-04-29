@@ -1,6 +1,5 @@
 package com.rdpk.mars.web;
 
-import com.rdpk.mars.MarsMissionController;
 import com.rdpk.mars.web.representations.MissionRepresentation;
 import com.rdpk.mars.web.representations.MissionRepresentationFunction;
 import io.swagger.annotations.Api;

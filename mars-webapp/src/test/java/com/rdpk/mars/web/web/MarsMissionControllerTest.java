@@ -1,9 +1,9 @@
-package com.rdpk.mars.web;
+package com.rdpk.mars.web.web;
 
 import com.rdpk.mars.Direction;
 import com.rdpk.mars.Location;
-import com.rdpk.mars.MarsMissionController;
 import com.rdpk.mars.Mission;
+import com.rdpk.mars.web.MarsMissionController;
 import lombok.val;
 import org.junit.Test;
 

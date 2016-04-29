@@ -1,5 +1,8 @@
-package com.rdpk.mars;
+package com.rdpk.mars.web;
 
+import com.rdpk.mars.Mission;
+import com.rdpk.mars.web.helpers.ProtocolCommandParser;
+import com.rdpk.mars.web.helpers.ProtocolResponseHelper;
 import lombok.Getter;
 import lombok.val;
 import org.slf4j.Logger;

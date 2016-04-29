@@ -1,5 +1,7 @@
-package com.rdpk.mars;
+package com.rdpk.mars.web.helpers;
 
+import com.rdpk.mars.Plateau;
+import com.rdpk.mars.Rover;
 import lombok.Value;
 
 /**

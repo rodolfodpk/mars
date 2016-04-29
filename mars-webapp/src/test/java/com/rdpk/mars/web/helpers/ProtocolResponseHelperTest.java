@@ -1,6 +1,7 @@
-package com.rdpk.mars.web;
+package com.rdpk.mars.web.helpers;
 
 import com.rdpk.mars.*;
+import com.rdpk.mars.web.helpers.ProtocolResponseHelper;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;

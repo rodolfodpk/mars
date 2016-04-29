@@ -1,5 +1,7 @@
-package com.rdpk.mars;
+package com.rdpk.mars.web.helpers;
 
+import com.rdpk.mars.Direction;
+import com.rdpk.mars.Location;
 import javaslang.Tuple;
 import javaslang.Tuple2;
 import lombok.Getter;

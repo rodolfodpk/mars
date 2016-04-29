@@ -1,8 +1,8 @@
-package com.rdpk.mars.web;
+package com.rdpk.mars.web.helpers;
 
 import com.rdpk.mars.Direction;
 import com.rdpk.mars.Location;
-import com.rdpk.mars.ProtocolCommandParser;
+import com.rdpk.mars.web.helpers.ProtocolCommandParser;
 import javaslang.Tuple;
 import org.junit.Test;
 

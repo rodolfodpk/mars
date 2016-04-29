@@ -1,6 +1,5 @@
 package com.rdpk.mars.web;
 
-import com.rdpk.mars.MarsMissionController;
 import com.rdpk.mars.Mission;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;

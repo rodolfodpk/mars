@@ -1,7 +1,6 @@
 package com.rdpk.mars.web.representations;
 
 import com.rdpk.mars.Direction;
-import com.rdpk.mars.Location;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
@@ -17,7 +16,7 @@ public class RoverRepresentation {
     Direction direction ;
 
     String plateauId ;
-    Location location ;
-    List<Location> pastLocations ;
+    LocationRepresentation location ;
+    List<LocationRepresentation> pastLocations ;
 
 }
