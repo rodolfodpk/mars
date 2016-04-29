@@ -23,6 +23,7 @@ public class PlateauWasCreated implements MissionContextState {
             targetRover.land(mission.getPlateau(), location, direction);
             mission.setTargetRover(targetRover);
         }
+        targetRover.changeDirection(direction);
         mission.setContextState(mission.getRoverIsTargeted());
     }
 

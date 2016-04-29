@@ -46,6 +46,15 @@ public class Rover {
 		this.direction = direction ;
 	}
 
+
+    /**
+     * Change direction
+     * @param newDirection
+     */
+    public void changeDirection(Direction newDirection) {
+        this.direction = newDirection;
+    }
+
 	/**
 	 * Turn to left
 	 */
@@ -140,4 +149,5 @@ public class Rover {
                 "id='" + id + '\'' +
                 '}';
     }
+
 }

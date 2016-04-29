@@ -22,6 +22,7 @@ public class RoverIsTargeted implements MissionContextState {
             targetRover = new Rover(roverId);
             targetRover.land(mission.getPlateau(), location, direction);
         }
+        targetRover.changeDirection(direction);
         mission.setTargetRover(targetRover);
         mission.setContextState(mission.getRoverIsTargeted());
     }
