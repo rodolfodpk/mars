@@ -1,9 +1,10 @@
 package com.rdpk.mars;
 
+import javaslang.Tuple;
+import javaslang.Tuple2;
 import lombok.Getter;
+import lombok.val;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,9 +13,9 @@ import java.util.regex.Pattern;
  */
 public class ProtocolCommandParser {
 
-    private Pattern plateauCreation = Pattern.compile("(\\d*)\\s(\\d*)");
-    private Pattern roverCoordinates = Pattern.compile("(\\d*)\\s(\\d*)\\s([N|S|E|W])");
-    private Pattern roverMoving = Pattern.compile("[M|L|R]*");
+    static private Pattern plateauCreation = Pattern.compile("(\\d*)\\s(\\d*)");
+    static private Pattern roverCoordinates = Pattern.compile("(\\d*)\\s(\\d*)\\s([N|S|E|W])");
+    static private Pattern roverMoving = Pattern.compile("[M|L|R]*");
 
     @Getter
     private final String protocolCommand ;
@@ -35,35 +36,15 @@ public class ProtocolCommandParser {
 
     public boolean isRoverMoving () { return matcherRoverMoving.matches(); }
 
-    public Plateau plateau(String id) {
-        return new Plateau(id, new Integer(matcherPlateau.group(1)),
-                new Integer(matcherPlateau.group(2)));
+    public Tuple2<Integer, Integer> plateauAttributes() {
+        return Tuple.of(new Integer(matcherPlateau.group(1)), new Integer(matcherPlateau.group(2)));
     }
 
-    public Location location() {
-        return new Location(new Integer(matcherRoverCoordinates.group(1)),
-                            new Integer(matcherRoverCoordinates.group(2)));
-    }
-
-    public Direction direction() {
-        return getDirectionOf(matcherRoverCoordinates.group(3));
-    }
-
-    public List<Runnable> roverSteps(Rover targetRover) {
-        List<Runnable> stepsList = new ArrayList<>();
-        // iterate our actions
-        char[] actionsList = protocolCommand.toCharArray();
-        for (int i = 0; i < actionsList.length; i++) {
-            // System.out.println(i + " action for the rover = " + actionsList[i]) ;
-            if (actionsList[i] == 'L') { // turn to left action
-                stepsList.add(targetRover::turnToLeft) ;
-            } else if (actionsList[i] == 'R') { // turn to right action
-                stepsList.add(targetRover::turnToRight) ;
-            } else if (actionsList[i] == 'M') { // move action
-                stepsList.add(targetRover::moveForward) ;
-            }
-        }
-        return stepsList;
+    public Tuple2<Location, Direction> roverAttributes() {
+        val location = new Location(new Integer(matcherRoverCoordinates.group(1)),
+                                    new Integer(matcherRoverCoordinates.group(2)));
+        val direction = getDirectionOf(matcherRoverCoordinates.group(3));
+        return Tuple.of(location, direction);
     }
 
     /**

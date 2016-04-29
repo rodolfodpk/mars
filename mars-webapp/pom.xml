@@ -13,6 +13,7 @@
 	
 	<properties>
         <dropwizard.version>1.0.0-rc2</dropwizard.version>
+		<javaslang.version>2.0.2</javaslang.version>
 	</properties>
 
 	<dependencies>
@@ -26,6 +27,12 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.javaslang</groupId>
+			<artifactId>javaslang</artifactId>
+			<version>${javaslang.version}</version>
 		</dependency>
 
 		<dependency>

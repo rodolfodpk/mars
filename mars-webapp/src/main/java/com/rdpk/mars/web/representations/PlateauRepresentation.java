@@ -6,8 +6,6 @@ import lombok.Value;
 
 import java.util.Set;
 
-/**
- */
 @Value @Builder @AllArgsConstructor
 public class PlateauRepresentation {
 

@@ -5,8 +5,6 @@ import com.rdpk.mars.Plateau;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-/**
- */
 public class PlateauRepresentationFunction implements Function<Plateau, PlateauRepresentation> {
     @Override
     public PlateauRepresentation apply(Plateau plateau) {

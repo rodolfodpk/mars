@@ -1,9 +1,5 @@
 package com.rdpk.mars;
 
-import com.rdpk.mars.exceptions.IllegalOperation;
-import com.rdpk.mars.exceptions.LocationConflict;
-import com.rdpk.mars.exceptions.RoverAlreadyLanded;
-import com.rdpk.mars.exceptions.UnknownLocation;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -39,7 +35,7 @@ public class Rover {
 	public void land(Plateau plateau, Location location, Direction direction) {
 
 		if (this.isLanded) {
-			throw new RoverAlreadyLanded() ;
+			throw new IllegalStateException(String.format("this rover [%s] is already landed", this)) ;
 		}
 
 		plateau.addRover(this, location) ;
@@ -86,7 +82,7 @@ public class Rover {
 	public void moveForward() {
 
 		if (!isLanded) {
-			throw new IllegalOperation("Rover must be landed before any move") ;
+			throw new IllegalStateException("Rover must be landed before any move") ;
 
 		}
 
@@ -103,11 +99,11 @@ public class Rover {
 		}
 
 		if (plateau.isLocationBusy(newLocation)) {
-			throw new LocationConflict() ;
+			throw new IllegalStateException(String.format("new location [%s] is already occupied", newLocation)) ;
 		}
 
 		if (plateau.isUnknownLocation(newLocation)) {
-			throw new UnknownLocation() ;
+			throw new IllegalStateException(String.format("new location [%s] is invalid for this plateau", newLocation)) ;
 		}
 
 		pastLocations.add(location) ;
@@ -137,4 +133,11 @@ public class Rover {
         return id.hashCode();
     }
 
+
+    @Override
+    public String toString() {
+        return "Rover{" +
+                "id='" + id + '\'' +
+                '}';
+    }
 }

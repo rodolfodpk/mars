@@ -1,11 +1,14 @@
 package com.rdpk.mars.web;
 
 import com.rdpk.mars.MarsMissionController;
+import com.rdpk.mars.Mission;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.federecio.dropwizard.swagger.SwaggerBundle;
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  */
@@ -29,6 +32,6 @@ public class MarsMissionApplication extends Application<MarsMIssionConfiguration
     @Override
     public void run(MarsMIssionConfiguration configuration, Environment environment) throws Exception {
         // add your resources as usual
-        environment.jersey().register(new MarsMissionResource(new MarsMissionController()));
+        environment.jersey().register(new MarsMissionResource(new MarsMissionController(new Mission(), new AtomicInteger())));
     }
 }

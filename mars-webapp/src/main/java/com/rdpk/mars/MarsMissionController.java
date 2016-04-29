@@ -1,11 +1,10 @@
 package com.rdpk.mars;
 
-import com.rdpk.mars.exceptions.IllegalOperation;
 import lombok.Getter;
+import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -15,10 +14,14 @@ public class MarsMissionController {
 
     private final Logger log = LoggerFactory.getLogger(MarsMissionController.class);
 
-    @Getter private Plateau plateau;
-    @Getter Optional<Rover> targetRover = Optional.empty();
+    @Getter
+    private final Mission mission ;
+    private final AtomicInteger roverIdCounter;
 
-    private final AtomicInteger roverIdCounter = new AtomicInteger();
+    public MarsMissionController(Mission mission, AtomicInteger roverIdCounter) {
+        this.mission = mission;
+        this.roverIdCounter = roverIdCounter;
+    }
 
     /**
      * Execute a command received from NASA.
@@ -28,38 +31,27 @@ public class MarsMissionController {
 
         ProtocolCommandParser parser = new ProtocolCommandParser(command);
 
-        if (plateau == null && !parser.isPlateauCreation()) {
-            throw new IllegalOperation("The first command must be a plateau creation");
-        }
-
         if (parser.isPlateauCreation()) {
-            log.info("Plateau created");
-            this.plateau = parser.plateau("plateau-1");
+            log.info("trying to create plateau");
+            val tuple = parser.plateauAttributes();
+            mission.createPlateau("target-plateau", tuple._1(), tuple._2());
             return ;
         }
 
         if (parser.isRoverCoordinates()) {
-            targetRover = plateau.getRoverAt(parser.location());
-            if (!targetRover.isPresent()) {
-                log.info("Rover landing");
-                targetRover = Optional.of(new Rover(String.format("rover-%d", roverIdCounter.incrementAndGet())));
-                targetRover.get().land(plateau, parser.location(), parser.direction());
-            }
-            return;
+            log.info("trying to land or locate rover");
+            val tuple = parser.roverAttributes();
+            mission.landOrSerTargerRover(nextRoverId(), tuple._1(), tuple._2());
+            return ;
         }
 
         if (parser.isRoverMoving()) {
-            log.info("Rover moving");
-            if (targetRover.isPresent()) {
-                log.info("Rover moving");
-                parser.roverSteps(targetRover.get()).forEach(Runnable::run);
-            } else {
-                throw new IllegalOperation("There is not any rover in context to move");
-            }
-            return;
+            log.info("trying to move rover");
+            mission.moveRover(command);
+            return ;
         }
 
-        throw new IllegalOperation("Unknown command");
+        throw new IllegalArgumentException("Unknown command");
     }
 
     /**
@@ -67,7 +59,11 @@ public class MarsMissionController {
      * @return status
      */
     public String getStatus() {
-        return new ProtocolResponseHelper(plateau).getStatus();
+        return new ProtocolResponseHelper(mission.getPlateau()).getStatus();
+    }
+
+    private String nextRoverId() {
+        return String.format("rover-%d", roverIdCounter.incrementAndGet());
     }
 
 }

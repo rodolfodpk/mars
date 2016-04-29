@@ -1,86 +1,43 @@
 package com.rdpk.mars.web;
 
+import com.rdpk.mars.Direction;
 import com.rdpk.mars.Location;
 import com.rdpk.mars.MarsMissionController;
-import com.rdpk.mars.exceptions.IllegalOperation;
+import com.rdpk.mars.Mission;
+import lombok.val;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class MarsMissionControllerTest {
 
-	@Test(expected = IllegalOperation.class)
-	public void cmd_without_previsou_plateau() {
-		MarsMissionController o = new MarsMissionController() ;
-		o.executeCommand("5 5 M") ;
-	}
-
-	@Test
-	public void create_plateau() {
-		MarsMissionController o = new MarsMissionController() ;
-		o.executeCommand("5 10") ;
-		assertTrue(o.getPlateau().getXSize()==5 && o.getPlateau().getYSize()==10) ;
-	}
-
-	@Test(expected = IllegalOperation.class)
-	public void invalid_rover_plateau() {
-		MarsMissionController o = new MarsMissionController() ;
-		o.executeCommand("5 10") ;
-		o.executeCommand("1 2 X") ;
-	}
-
     @Test
-    public void finally_lets_see_that_input_and_output() {
-		/*
-		 * Test Input:
-			5 5
-			1 2 N
-			LMLMLMLMM
-			3 3 E
-			MMRMMRMRRM
-
-			Expected Output:
-			1 3 N
-			5 1 E
-		 */
-        MarsMissionController o = new MarsMissionController() ;
-
-        // plateau
-        o.executeCommand("5 5") ;
-
-        // rover1
-        o.executeCommand("1 2 N") ;
-        o.executeCommand("LMLMLMLMM") ;
-
-        // rover 2
-        o.executeCommand("3 3 E") ;
-        o.executeCommand("MMRMMRMRRM") ;
-
-        // expected output
-        assertEquals(o.getStatus(), "1 3 N\n5 1 E\n");
-
-        // also asserts there are 2 rovers
-        assertEquals(o.getPlateau().getRovers().size(), 2);
-
+    public void create_plateau() {
+        val mission = mock(Mission.class);
+        val controller = new MarsMissionController(mission, new AtomicInteger()) ;
+        controller.executeCommand("5 10") ;
+        verify(mission).createPlateau(any(String.class), eq(5), eq(10));
     }
 
     @Test
-    public void io_test_one_rover_moving() {
-        MarsMissionController o = new MarsMissionController() ;
-        o.executeCommand("5 10") ;
-        o.executeCommand("1 2 N") ;
-        o.executeCommand("LMLMLMLMM") ;
-        assertEquals(o.getStatus(), "1 3 N\n");
-    }
+    public void must_land_or_locate_rover() {
+	    val mission = mock(Mission.class);
+		val controller = new MarsMissionController(mission, new AtomicInteger()) ;
+		controller.executeCommand("5 5 N") ;
+        verify(mission).landOrSerTargerRover(any(String.class), eq(new Location(5, 5)), eq(Direction.NORTH));
+	}
 
     @Test
-    public void io_test_one_rover_without_moving() {
-        MarsMissionController o = new MarsMissionController() ;
-        o.executeCommand("5 10") ;
-        o.executeCommand("1 2 N") ;
-        assertTrue(o.getPlateau().isLocationBusy(new Location(1, 2))) ;
-        assertEquals(o.getStatus(), "1 2 N\n");
-    }
+	public void must_move_rover() {
+        val mission = mock(Mission.class);
+        val controller = new MarsMissionController(mission, new AtomicInteger()) ;
+        controller.executeCommand("MMMLRRRLMM") ;
+        verify(mission).moveRover("MMMLRRRLMM");
+	}
 
 }

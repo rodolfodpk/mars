@@ -4,8 +4,6 @@ import com.rdpk.mars.Rover;
 
 import java.util.function.Function;
 
-/**
- */
 public class RoverRepresentationFunction implements Function<Rover, RoverRepresentation> {
 
     @Override

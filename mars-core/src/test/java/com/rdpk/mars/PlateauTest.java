@@ -1,8 +1,5 @@
 package com.rdpk.mars;
 
-import com.rdpk.mars.exceptions.LocationConflict;
-import com.rdpk.mars.exceptions.RoverAlreadyLanded;
-import com.rdpk.mars.exceptions.UnknownLocation;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -29,7 +26,7 @@ public class PlateauTest {
 
 	}
 
-	@Test(expected = RoverAlreadyLanded.class)
+	@Test(expected = IllegalStateException.class)
 	public void it_must_fail_when_already_landed() {
 
 		Plateau plateau = new Plateau(id, 5, 5);
@@ -38,7 +35,7 @@ public class PlateauTest {
 		rover1.land(plateau, new Location(1, 3), Direction.NORTH);
 	}
 
-	@Test(expected = LocationConflict.class)
+	@Test(expected = IllegalStateException.class)
 	public void it_must_fail_on_location_conflict() {
 
 		Plateau plateau = new Plateau(id, 5, 5);
@@ -50,7 +47,7 @@ public class PlateauTest {
 
 	}
 	
-	@Test(expected = UnknownLocation.class)
+	@Test(expected = IllegalStateException.class)
 	public void it_must_fail_on_unknown_location_outside() {
 		
 		Plateau plateau = new Plateau(id, 5, 5);

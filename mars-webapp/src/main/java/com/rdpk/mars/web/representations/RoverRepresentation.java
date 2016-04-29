@@ -8,8 +8,6 @@ import lombok.Value;
 
 import java.util.List;
 
-/**
- */
 @Value @Builder @AllArgsConstructor
 public class RoverRepresentation {
 

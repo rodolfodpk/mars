@@ -1,7 +1,5 @@
 package com.rdpk.mars;
 
-import com.rdpk.mars.exceptions.LocationConflict;
-import com.rdpk.mars.exceptions.UnknownLocation;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
@@ -39,10 +37,10 @@ public class Plateau {
 	public void addRover(Rover rover, Location location) {
 
 		if (isLocationBusy(location)) {
-			throw new LocationConflict() ;
+			throw new IllegalStateException(String.format("this location [%s] is already occupied", location)) ;
 		}
 		if (isUnknownLocation(location)) {
-			throw new UnknownLocation() ;
+			throw new IllegalStateException(String.format("this location [%s] is invalid for this plateau", location)) ;
 		}
 		rovers.add(rover) ;
 
