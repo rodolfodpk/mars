@@ -90,7 +90,7 @@ public class HappyPathScenarioTest {
     }
 
     @Test
-    public void stage4_get_on_empty_mission_must_return_no_content() throws Exception {
+    public void stage4_get_on_current_mission_must_return_current_mission() throws Exception {
 
         Mission mission = new Mission();
         mission.createPlateau("target-plateau", 5, 5);
