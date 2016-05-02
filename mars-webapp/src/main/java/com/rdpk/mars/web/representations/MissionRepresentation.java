@@ -6,6 +6,7 @@ import lombok.Value;
 
 @Value @Builder @AllArgsConstructor public class MissionRepresentation {
 
+    String state;
     PlateauRepresentation plateauRepresentation;
     RoverRepresentation targetRover;
 

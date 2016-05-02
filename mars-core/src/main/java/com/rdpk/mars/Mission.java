@@ -10,19 +10,18 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Builder @AllArgsConstructor
+@Getter @Builder @AllArgsConstructor
 public class Mission {
 
     private final Logger log = LoggerFactory.getLogger(Mission.class);
 
-    @Getter private InitialState initialState;
-    @Getter private PlateauWasCreated plateauWasCreated;
-    @Getter private RoverIsTargeted roverIsTargeted;
+    private InitialState initialState;
+    private PlateauWasCreated plateauWasCreated;
+    private RoverIsTargeted roverIsTargeted;
+    @Setter MissionContextState contextState;
 
-    @Getter @Setter MissionContextState contextState;
-
-    @Getter @Setter private Plateau plateau;
-    @Getter @Setter private Rover targetRover;
+    @Setter private Plateau plateau;
+    @Setter private Rover targetRover;
 
     public Mission() {
         this.initialState = new InitialState(this);
