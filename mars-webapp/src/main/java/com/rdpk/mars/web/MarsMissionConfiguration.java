@@ -6,7 +6,7 @@ import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration;
 
 /**
  */
-public class MarsMIssionConfiguration extends Configuration {
+public class MarsMissionConfiguration extends Configuration {
 
     @JsonProperty("swagger")
     public SwaggerBundleConfiguration swaggerBundleConfiguration;

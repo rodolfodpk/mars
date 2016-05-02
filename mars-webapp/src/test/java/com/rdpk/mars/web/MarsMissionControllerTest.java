@@ -1,4 +1,4 @@
-package com.rdpk.mars.web.web;
+package com.rdpk.mars.web;
 
 import com.rdpk.mars.Direction;
 import com.rdpk.mars.Location;

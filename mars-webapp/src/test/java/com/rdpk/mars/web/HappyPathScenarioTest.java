@@ -1,6 +1,10 @@
 package com.rdpk.mars.web;
 
+import com.rdpk.mars.Direction;
+import com.rdpk.mars.Location;
+import com.rdpk.mars.Mission;
 import com.rdpk.mars.web.representations.MissionRepresentation;
+import com.rdpk.mars.web.representations.MissionRepresentationFunction;
 import io.dropwizard.testing.ResourceHelpers;
 import io.dropwizard.testing.junit.DropwizardAppRule;
 import org.junit.*;
@@ -22,7 +26,7 @@ public class HappyPathScenarioTest {
     private static final String CONFIG_PATH = ResourceHelpers.resourceFilePath("mars-config.yaml");
 
     @ClassRule
-    public static final DropwizardAppRule<MarsMIssionConfiguration> RULE = new DropwizardAppRule<>(
+    public static final DropwizardAppRule<MarsMissionConfiguration> RULE = new DropwizardAppRule<>(
             MarsMissionApplication.class, CONFIG_PATH);
 
             // ConfigOverride.config("database.url", "jdbc:h2:" + TMP_FILE));
@@ -85,17 +89,23 @@ public class HappyPathScenarioTest {
 
     }
 
-    @Test @Ignore // TODO getting ser/des error
+    @Test
     public void stage4_get_on_empty_mission_must_return_no_content() throws Exception {
+
+        Mission mission = new Mission();
+        mission.createPlateau("target-plateau", 5, 5);
+        mission.landOrSerTargerRover("rover-1", new Location(0, 2), Direction.NORTH);
+
+        MissionRepresentation expected = new MissionRepresentationFunction().apply(mission);
 
         final Response response = client.target("http://localhost:" + RULE.getLocalPort() + "/mars")
                 .request().buildGet().invoke();
 
         assertEquals(200, response.getStatus());
 
-        MissionRepresentation missionRepr = response.readEntity(MissionRepresentation.class);
+        MissionRepresentation result = response.readEntity(MissionRepresentation.class);
 
-        System.out.println(missionRepr);
+        assertEquals(result, expected);
     }
 
 

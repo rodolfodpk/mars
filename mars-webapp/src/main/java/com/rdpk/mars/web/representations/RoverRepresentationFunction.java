@@ -17,9 +17,6 @@ public class RoverRepresentationFunction implements Function<Rover, RoverReprese
                 .isLanded(rover.isLanded())
                 .location(f.apply(rover.getLocation()))
                 .direction(rover.getDirection())
-                .pastLocations(rover.getPastLocations()
-                        .stream()
-                        .map(f::apply).collect(Collectors.toList()))
                 .build();
     }
 }
