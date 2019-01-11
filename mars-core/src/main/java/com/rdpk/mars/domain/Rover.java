@@ -56,8 +56,6 @@ class Rover {
       default: System.out.println("oops");
     }
 
-    if (newLocation == location) return;
-
     if (plateau.isLocationBusy(newLocation)) {
       throw new IllegalStateException(String.format("new location [%s] is already occupied", newLocation));
     }

@@ -1,10 +1,12 @@
 package com.rdpk.mars.domain;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Getter
 @ToString
@@ -27,7 +29,7 @@ public class Plateau {
     if (location.isBiggerThan(topRight)) {
       throw new IllegalArgumentException(String.format("Location %s is not within %s", location, topRight));
     }
-    Optional<Rover> target = rovers.stream().filter(rover -> rover.location == location).findFirst();
+    Optional<Rover> target = rovers.stream().filter(rover -> rover.location.equals(location)).findFirst();
     if (target.isPresent()) {
       activeRover = target.get();
     } else {
@@ -42,6 +44,7 @@ public class Plateau {
       throw new IllegalStateException("Before moving a rover you must to activate it");
     }
     System.out.println("before move \n" + this);
+    rovers.remove(activeRover);
     moves.forEach(move -> {
       switch (move) {
         case WALK: activeRover.moveForward(this); break;
@@ -51,11 +54,12 @@ public class Plateau {
       }
       System.out.println(activeRover);
     });
+    rovers.add(activeRover);
     System.out.println("after activate \n" + this);
   }
 
   boolean isLocationBusy(Coordinates newLocation) {
-    return rovers.stream().filter(rover -> rover.location == newLocation).findFirst().isPresent();
+    return rovers.stream().anyMatch(rover -> rover.location.equals(newLocation));
   }
 
   boolean isUnknownLocation(Coordinates newLocation) {
