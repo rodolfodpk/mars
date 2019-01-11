@@ -1,6 +1,5 @@
 package com.rdpk.mars.domain;
 
-import lombok.Getter;
 import lombok.ToString;
 
 import java.util.HashSet;
@@ -8,13 +7,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-@Getter
 @ToString
 public class Plateau {
 
   final String name;
   Coordinates topRight;
-  Set<Rover> rovers =  new HashSet<>();
+  Set<Rover> rovers = new HashSet<>();
   Rover activeRover;
 
   public Plateau(String name) {
@@ -36,14 +34,14 @@ public class Plateau {
       activeRover = new Rover(location, direction);
       rovers.add(activeRover);
     }
-    System.out.println("after activate \n" + this);
+//    System.out.println("after activate \n" + this);
   }
 
   public void move(List<MoveRoverAction> moves) {
     if (activeRover == null) {
       throw new IllegalStateException("Before moving a rover you must to activate it");
     }
-    System.out.println("before move \n" + this);
+//    System.out.println("before move \n" + this);
     rovers.remove(activeRover);
     moves.forEach(move -> {
       switch (move) {
@@ -52,10 +50,10 @@ public class Plateau {
         case TURN_RIGHT: activeRover.turnToRight(); break;
         default: System.out.println("oops");
       }
-      System.out.println(activeRover);
+//      System.out.println(activeRover);
     });
     rovers.add(activeRover);
-    System.out.println("after activate \n" + this);
+//    System.out.println("after activate \n" + this);
   }
 
   boolean isLocationBusy(Coordinates newLocation) {
