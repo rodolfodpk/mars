@@ -11,9 +11,5 @@
 	<artifactId>mars-core</artifactId>
 	<packaging>jar</packaging>
 
-	<dependencies>
-
-	</dependencies>
-
 </project>
 

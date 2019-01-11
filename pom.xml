@@ -14,6 +14,9 @@
         <junit.platform.version>1.3.1</junit.platform.version>
         <sl4j.version>1.7.9</sl4j.version>
         <lombok.version>1.18.4</lombok.version>
+        <vertx.version>3.6.2</vertx.version>
+        <fabric8-vertx-maven-plugin.projectVersion>1.0.13</fabric8-vertx-maven-plugin.projectVersion>
+        <vertx.verticle>com.rdpk.mars.rest</vertx.verticle>
 
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -28,8 +31,28 @@
 
     <modules>
         <module>mars-core</module>
-        <!--<module>mars-webapp</module>-->
+        <module>mars-rest</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>com.rdpk</groupId>
+                <artifactId>mars-core</artifactId>
+                <version>${project.parent.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-dependencies</artifactId>
+                <version>${vertx.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
 
