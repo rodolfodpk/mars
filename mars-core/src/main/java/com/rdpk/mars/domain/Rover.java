@@ -5,10 +5,10 @@ import lombok.ToString;
 
 @EqualsAndHashCode
 @ToString
-class Rover {
+public class Rover {
 
-  Coordinates location;
-  Direction direction;
+  public Coordinates location;
+  public Direction direction;
 
   Rover(Coordinates location, Direction direction) {
     this.location = location;

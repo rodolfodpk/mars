@@ -4,11 +4,11 @@ import com.rdpk.mars.domain.Plateau;
 
 import java.util.Map;
 
-class PlateauRepository {
+public class PlateauRepository {
 
   private final Map<String, Plateau> storage;
 
-  PlateauRepository(Map<String, Plateau> storage) {
+  public PlateauRepository(Map<String, Plateau> storage) {
     this.storage = storage;
   }
 

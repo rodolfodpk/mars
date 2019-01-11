@@ -1,9 +1,18 @@
 package com.rdpk.mars.rest;
 
+import com.rdpk.mars.command.PlateauCommandHandler;
+import com.rdpk.mars.command.PlateauRepository;
+import com.rdpk.mars.domain.Coordinates;
+import com.rdpk.mars.domain.Plateau;
+import com.rdpk.mars.read.PlateauReadModel;
+import com.rdpk.mars.read.PlateauReadRepository;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.Launcher;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
@@ -13,13 +22,41 @@ import io.vertx.ext.web.api.contract.RouterFactoryOptions;
 import io.vertx.ext.web.api.contract.openapi3.OpenAPI3RouterFactory;
 import io.vertx.ext.web.api.validation.ValidationException;
 
-public class Bootstrap extends AbstractVerticle {
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-  HttpServer server;
+import static com.rdpk.mars.domain.Direction.EAST;
+import static com.rdpk.mars.domain.Direction.NORTH;
+import static com.rdpk.mars.domain.MoveRoverAction.TURN_LEFT;
+import static com.rdpk.mars.domain.MoveRoverAction.TURN_RIGHT;
+import static com.rdpk.mars.domain.MoveRoverAction.WALK;
+import static java.util.Arrays.asList;
 
-  Logger logger = LoggerFactory.getLogger("OpenAPI3RouterFactory");
+public class MarsRestServer extends AbstractVerticle {
+
+  static HttpServer server;
+
+  static Logger logger = LoggerFactory.getLogger("MarsRestServer");
 
   public void start(Future future) {
+
+    Map<String, Plateau> storage = new ConcurrentHashMap<>();
+    PlateauCommandHandler commandHandler = new PlateauCommandHandler(new PlateauRepository(storage));
+    PlateauReadRepository repository = new PlateauReadRepository(storage);
+
+    Plateau plateau =  new Plateau("teste1");
+    plateau.resize(new Coordinates(5, 5));
+
+    // TODO just for test
+    // rover 1
+    plateau.activate(new Coordinates(1, 2), NORTH);
+    plateau.move(asList(TURN_LEFT, WALK, TURN_LEFT, WALK, TURN_LEFT, WALK, TURN_LEFT, WALK, WALK));
+    // rover 2
+    plateau.activate(new Coordinates(3, 3), EAST);
+    plateau.move(asList(WALK, WALK, TURN_RIGHT, WALK, WALK, TURN_RIGHT, WALK, TURN_RIGHT, TURN_RIGHT, WALK));
+    storage.put(plateau.name, plateau);
+
     // Load the api spec. This operation is asynchronous
     OpenAPI3RouterFactory.create(this.vertx, "mars-api.yaml", openAPI3RouterFactoryAsyncResult -> {
       if (openAPI3RouterFactoryAsyncResult.failed()) {
@@ -28,13 +65,15 @@ public class Bootstrap extends AbstractVerticle {
         logger.error("oops, something went wrong during factory initialization", exception);
         future.fail(exception);
       }
+
       // Spec loaded with success
       OpenAPI3RouterFactory routerFactory = openAPI3RouterFactoryAsyncResult.result();
+
       // Add an handler with operationId
-      routerFactory.addHandlerByOperationId("listPets", routingContext -> {
+      routerFactory.addHandlerByOperationId("listPlateaus", routingContext -> {
         // Load the parsed parameters
         RequestParameters params = routingContext.get("parsedParameters");
-        // Handle listPets operation
+        // Handle listPlateaus operation
         RequestParameter limitParameter = params.queryParameter(/* Parameter name */ "limit");
         if (limitParameter != null) {
           // limit parameter exists, use it!
@@ -43,10 +82,14 @@ public class Bootstrap extends AbstractVerticle {
           // limit parameter doesn't exist (it's not required).
           // If it's required you don't have to check if it's null!
         }
-        routingContext.response().setStatusMessage("OK").end();
+
+        List<PlateauReadModel> plateaus = repository.getPlateaus();
+        routingContext.response().setStatusMessage("OK").end(Json.encodePrettily(plateaus));
       });
+
+
       // Add a failure handler
-      routerFactory.addFailureHandlerByOperationId("listPets", routingContext -> {
+      routerFactory.addFailureHandlerByOperationId("listPlateaus", routingContext -> {
         // This is the failure handler
         Throwable failure = routingContext.failure();
         if (failure instanceof ValidationException)
@@ -87,12 +130,12 @@ public class Bootstrap extends AbstractVerticle {
   }
 
   public void stop() {
-    this.server.close();
+    server.close();
   }
 
   // Convenience method so you can run it in your IDE
   public static void main(String[] args) {
-    // Runner.runExample(OpenAPI3Server.class);
+    Launcher.executeCommand("run", MarsRestServer.class.getName());
   }
 
 }

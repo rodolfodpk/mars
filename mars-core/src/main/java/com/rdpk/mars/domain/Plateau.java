@@ -10,10 +10,10 @@ import java.util.Set;
 @ToString
 public class Plateau {
 
-  final String name;
-  Coordinates topRight;
-  Set<Rover> rovers = new HashSet<>();
-  Rover activeRover;
+  public final String name;
+  public Coordinates topRight;
+  public Set<Rover> rovers = new HashSet<>();
+  public Rover activeRover;
 
   public Plateau(String name) {
     this.name = name;
