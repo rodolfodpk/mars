@@ -46,7 +46,7 @@ class PlateauTest {
     plateau.activate(target, Direction.NORTH);
     assertThat(plateau.activeRover.location).isEqualTo(target);
     assertThat(plateau.rovers.size()).isEqualTo(1);
-    assertThat(plateau.rovers.get(target)).isEqualTo(new Rover(target, Direction.NORTH));
+    assertThat(plateau.rovers.contains(new Rover(target, Direction.NORTH))).isTrue();
     assertThat(plateau.isLocationBusy(target)).isTrue();
   }
 

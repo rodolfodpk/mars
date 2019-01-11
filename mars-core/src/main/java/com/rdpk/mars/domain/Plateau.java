@@ -4,9 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 @ToString
@@ -14,7 +12,7 @@ public class Plateau {
 
   final String name;
   Coordinates topRight;
-  Map<Coordinates, Rover> rovers =  new HashMap<>();
+  Set<Rover> rovers =  new HashSet<>();
   Rover activeRover;
 
   public Plateau(String name) {
@@ -29,15 +27,21 @@ public class Plateau {
     if (location.isBiggerThan(topRight)) {
       throw new IllegalArgumentException(String.format("Location %s is not within %s", location, topRight));
     }
-    rovers.computeIfAbsent(location, coordinates -> new Rover(coordinates, direction));
-    activeRover = rovers.get(location);
+    Optional<Rover> target = rovers.stream().filter(rover -> rover.location == location).findFirst();
+    if (target.isPresent()) {
+      activeRover = target.get();
+    } else {
+      activeRover = new Rover(location, direction);
+      rovers.add(activeRover);
+    }
+    System.out.println("after activate \n" + this);
   }
 
   public void move(List<MoveRoverAction> moves) {
     if (activeRover == null) {
       throw new IllegalStateException("Before moving a rover you must to activate it");
     }
-    System.out.println(this);
+    System.out.println("before move \n" + this);
     moves.forEach(move -> {
       switch (move) {
         case WALK: activeRover.moveForward(this); break;
@@ -47,12 +51,11 @@ public class Plateau {
       }
       System.out.println(activeRover);
     });
-    System.out.println(this);
-    rovers.put(activeRover.location, activeRover);
+    System.out.println("after activate \n" + this);
   }
 
   boolean isLocationBusy(Coordinates newLocation) {
-    return rovers.containsKey(newLocation);
+    return rovers.stream().filter(rover -> rover.location == newLocation).findFirst().isPresent();
   }
 
   boolean isUnknownLocation(Coordinates newLocation) {

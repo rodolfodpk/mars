@@ -10,7 +10,7 @@ import static com.rdpk.mars.domain.MoveRoverAction.*;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AcceptanceTest {
+class AcceptanceTest {
 
   Plateau plateau;
 
@@ -20,15 +20,25 @@ public class AcceptanceTest {
   }
 
   @Test
-  @DisplayName("it can check if a coordinate is within this plateau")
+  @DisplayName("the solution must work")
   void a5() {
+
     plateau.resize(new Coordinates(5, 5));
+
+    // rover 1
     plateau.activate(new Coordinates(1, 2), NORTH);
+    // LMLMLMLMM
     plateau.move(asList(TURN_LEFT, WALK, TURN_LEFT, WALK, TURN_LEFT, WALK, TURN_LEFT, WALK, WALK));
-    assertThat(plateau.activeRover.location).isEqualTo(new Coordinates(3, 3));
+    assertThat(plateau.activeRover.location).isEqualTo(new Coordinates(1, 3));
+    assertThat(plateau.activeRover.direction).isEqualTo(NORTH);
+
+    // rover 2
+    plateau.activate(new Coordinates(3, 3), EAST);
+    // MMRMMRMRRM
+    plateau.move(asList(WALK, WALK, TURN_RIGHT, WALK, WALK, TURN_RIGHT, WALK, TURN_RIGHT, TURN_RIGHT, WALK));
+    assertThat(plateau.activeRover.location).isEqualTo(new Coordinates(5, 1));
     assertThat(plateau.activeRover.direction).isEqualTo(EAST);
+
   }
-
-
 
 }
