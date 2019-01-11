@@ -3,7 +3,7 @@ info:
   version: 2.0.0
   title: Mars
   license:
-    name: just give me some beer
+    name: just give me some beer :)
 servers:
   - url: http://petstore.swagger.io/v1
 paths:
