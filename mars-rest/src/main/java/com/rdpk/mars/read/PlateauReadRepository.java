@@ -1,8 +1,11 @@
 package com.rdpk.mars.read;
 
 import com.rdpk.mars.domain.Plateau;
+import com.rdpk.mars.domain.Rover;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class PlateauReadRepository {
@@ -16,10 +19,15 @@ public class PlateauReadRepository {
   public List<PlateauReadModel> getPlateaus() {
     return storage.values().stream().map(plateau -> {
       Set<RoverReadModel> plateaus = plateau.rovers.stream()
-              .map(rover -> new RoverReadModel(rover.location.getX(), rover.location.getY(),
-                      rover.direction.name().substring(0, 1).toUpperCase())).collect(Collectors.toSet());
-      return new PlateauReadModel(plateau.name, plateau.topRight.getX(), plateau.topRight.getY(), plateaus);
+              .map(this::convert).collect(Collectors.toSet());
+      return new PlateauReadModel(plateau.name, plateau.topRight.getX(), plateau.topRight.getY(),
+              plateaus, convert(plateau.activeRover));
     }).collect(Collectors.toList());
+  }
+
+  private RoverReadModel convert(Rover rover) {
+    return new RoverReadModel(rover.location.getX(), rover.location.getY(),
+            rover.direction.name().substring(0, 1).toUpperCase());
   }
 
 }

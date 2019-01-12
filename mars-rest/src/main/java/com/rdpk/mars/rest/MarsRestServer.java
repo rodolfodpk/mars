@@ -8,11 +8,10 @@ import com.rdpk.mars.read.PlateauReadModel;
 import com.rdpk.mars.read.PlateauReadRepository;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
-import io.vertx.core.Launcher;
+import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.Json;
-import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
@@ -33,29 +32,26 @@ import static com.rdpk.mars.domain.MoveRoverAction.TURN_RIGHT;
 import static com.rdpk.mars.domain.MoveRoverAction.WALK;
 import static java.util.Arrays.asList;
 
-public class MarsRestServer extends AbstractVerticle {
+class MarsRestServer extends AbstractVerticle {
 
+  static Integer httpPort = 8080;
   static HttpServer server;
 
   static Logger logger = LoggerFactory.getLogger("MarsRestServer");
 
+  final Map<String, Plateau> storage ;
+  final PlateauCommandHandler commandHandler;
+  final PlateauReadRepository repository;
+
+  MarsRestServer(Map<String, Plateau> storage, PlateauCommandHandler commandHandler, PlateauReadRepository repository) {
+    this.storage = storage;
+    this.commandHandler = commandHandler;
+    this.repository = repository;
+  }
+
   public void start(Future future) {
 
-    Map<String, Plateau> storage = new ConcurrentHashMap<>();
-    PlateauCommandHandler commandHandler = new PlateauCommandHandler(new PlateauRepository(storage));
-    PlateauReadRepository repository = new PlateauReadRepository(storage);
-
-    Plateau plateau =  new Plateau("teste1");
-    plateau.resize(new Coordinates(5, 5));
-
-    // TODO just for test
-    // rover 1
-    plateau.activate(new Coordinates(1, 2), NORTH);
-    plateau.move(asList(TURN_LEFT, WALK, TURN_LEFT, WALK, TURN_LEFT, WALK, TURN_LEFT, WALK, WALK));
-    // rover 2
-    plateau.activate(new Coordinates(3, 3), EAST);
-    plateau.move(asList(WALK, WALK, TURN_RIGHT, WALK, WALK, TURN_RIGHT, WALK, TURN_RIGHT, TURN_RIGHT, WALK));
-    storage.put(plateau.name, plateau);
+    runEvidenceUseCase();
 
     // Load the api spec. This operation is asynchronous
     OpenAPI3RouterFactory.create(this.vertx, "mars-api.yaml", openAPI3RouterFactoryAsyncResult -> {
@@ -71,6 +67,7 @@ public class MarsRestServer extends AbstractVerticle {
 
       // Add an handler with operationId
       routerFactory.addHandlerByOperationId("listPlateaus", routingContext -> {
+        System.out.println("*** GET plateaus");
         // Load the parsed parameters
         RequestParameters params = routingContext.get("parsedParameters");
         // Handle listPlateaus operation
@@ -82,9 +79,11 @@ public class MarsRestServer extends AbstractVerticle {
           // limit parameter doesn't exist (it's not required).
           // If it's required you don't have to check if it's null!
         }
-
         List<PlateauReadModel> plateaus = repository.getPlateaus();
-        routingContext.response().setStatusMessage("OK").end(Json.encodePrettily(plateaus));
+        routingContext.response()
+                .putHeader("content-type", "application/json")
+                .setStatusMessage("OK")
+                .end(Json.encodePrettily(plateaus));
       });
 
 
@@ -115,7 +114,7 @@ public class MarsRestServer extends AbstractVerticle {
       Router router = routerFactory.setOptions(factoryOptions).getRouter();
 
       // Now you can use your Router instance
-      server = vertx.createHttpServer(new HttpServerOptions().setPort(8080).setHost("localhost"));
+      server = vertx.createHttpServer(new HttpServerOptions().setPort(httpPort).setHost("0.0.0.0"));
       server.requestHandler(router).listen((ar) ->  {
         if (ar.succeeded()) {
           logger.info("Server started on port " + ar.result().actualPort());
@@ -129,13 +128,41 @@ public class MarsRestServer extends AbstractVerticle {
 
   }
 
+  /**
+   * Just for testing purposes
+   */
+  private void runEvidenceUseCase() {
+
+    Plateau plateau =  new Plateau("teste1");
+    plateau.resize(new Coordinates(5, 5));
+
+    // rover 1
+    plateau.activate(new Coordinates(1, 2), NORTH);
+    plateau.move(asList(TURN_LEFT, WALK, TURN_LEFT, WALK, TURN_LEFT, WALK, TURN_LEFT, WALK, WALK));
+    // rover 2
+    plateau.activate(new Coordinates(3, 3), EAST);
+    plateau.move(asList(WALK, WALK, TURN_RIGHT, WALK, WALK, TURN_RIGHT, WALK, TURN_RIGHT, TURN_RIGHT, WALK));
+    storage.put(plateau.name, plateau);
+
+  }
+
   public void stop() {
     server.close();
   }
 
   // Convenience method so you can run it in your IDE
   public static void main(String[] args) {
-    Launcher.executeCommand("run", MarsRestServer.class.getName());
+
+    Map<String, Plateau> storage = new ConcurrentHashMap<>();
+    PlateauCommandHandler commandHandler = new PlateauCommandHandler(new PlateauRepository(storage));
+    PlateauReadRepository repository = new PlateauReadRepository(storage);
+
+    MarsRestServer verticle = new MarsRestServer(storage, commandHandler, repository);
+
+    Vertx.vertx().deployVerticle(verticle);
+
+    System.out.println("welcome to mars REST server!");
+
   }
 
 }

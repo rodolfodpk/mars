@@ -92,7 +92,8 @@ components:
       type: object
       required:
         - id
-        - name
+        - x
+        - y
       properties:
         id:
           type: integer

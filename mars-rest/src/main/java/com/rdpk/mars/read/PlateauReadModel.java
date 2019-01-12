@@ -9,5 +9,6 @@ public class PlateauReadModel {
   String id;
   int x;
   int y;
-  Set<RoverReadModel> rovers;
+  transient Set<RoverReadModel> rovers;
+  transient RoverReadModel activeRover;
 }
