@@ -1,10 +1,14 @@
 package com.rdpk.mars.read;
 
-import lombok.Value;
-
-@Value
 class RoverReadModel {
-  int x;
-  int y;
-  String direction;
+
+  public final int x;
+  public final int y;
+  public final String direction;
+
+  RoverReadModel(int x, int y, String direction) {
+    this.x = x;
+    this.y = y;
+    this.direction = direction;
+  }
 }

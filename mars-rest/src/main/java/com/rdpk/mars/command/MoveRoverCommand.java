@@ -1,14 +1,16 @@
 package com.rdpk.mars.command;
 
 import com.rdpk.mars.domain.MoveRoverAction;
-import lombok.Value;
 
 import java.util.List;
 
-@Value
 public class MoveRoverCommand {
 
-  String plateauName;
-  List<MoveRoverAction> moves;
+  public final String plateauId;
+  public final List<MoveRoverAction> moves;
 
+  public MoveRoverCommand(String plateauId, List<MoveRoverAction> moves) {
+    this.plateauId = plateauId;
+    this.moves = moves;
+  }
 }

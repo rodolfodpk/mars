@@ -1,14 +1,11 @@
 package com.rdpk.mars.domain;
 
 
-import lombok.ToString;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-@ToString
 public class Plateau {
 
   public final String name;
@@ -65,4 +62,11 @@ public class Plateau {
     return newLocation.isBiggerThan(topRight);
   }
 
+  @Override
+  public String toString() {
+    return "Plateau{" +
+            "name='" + name + '\'' +
+            ", topRight=" + topRight +
+            '}';
+  }
 }

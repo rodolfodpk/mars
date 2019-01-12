@@ -1,10 +1,7 @@
 package com.rdpk.mars.domain;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import java.util.Objects;
 
-@EqualsAndHashCode
-@ToString
 public class Rover {
 
   public Coordinates location;
@@ -49,10 +46,10 @@ public class Rover {
     Coordinates newLocation = null;
 
     switch (direction) {
-      case NORTH: newLocation = new Coordinates(location.getX(), location.getY() + 1); break;
-      case SOUTH: newLocation = new Coordinates(location.getX(), location.getY() - 1); break;
-      case EAST: newLocation = new Coordinates(location.getX() + 1, location.getY()); break;
-      case WEST: newLocation = new Coordinates(location.getX() - 1, location.getY()); break;
+      case NORTH: newLocation = new Coordinates(location.x, location.y + 1); break;
+      case SOUTH: newLocation = new Coordinates(location.x, location.y - 1); break;
+      case EAST: newLocation = new Coordinates(location.x + 1, location.y); break;
+      case WEST: newLocation = new Coordinates(location.x - 1, location.y); break;
       default: System.out.println("oops");
     }
 
@@ -68,4 +65,25 @@ public class Rover {
 
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Rover rover = (Rover) o;
+    return location.equals(rover.location) &&
+            direction == rover.direction;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(location, direction);
+  }
+
+  @Override
+  public String toString() {
+    return "Rover{" +
+            "location=" + location +
+            ", direction=" + direction +
+            '}';
+  }
 }

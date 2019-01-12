@@ -1,8 +1,10 @@
 package com.rdpk.mars.command;
 
-import lombok.Value;
-
-@Value
 public class CreateCommand {
-  String name;
+
+  public final String id;
+
+  public CreateCommand(String id) {
+    this.id = id;
+  }
 }

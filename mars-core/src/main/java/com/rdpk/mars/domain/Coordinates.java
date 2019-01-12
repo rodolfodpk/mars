@@ -1,15 +1,14 @@
 package com.rdpk.mars.domain;
 
-import lombok.Value;
+import java.util.Objects;
 
 /**
  * A location point given by x and y coordinates.
  */
-@Value
 public class Coordinates {
 
-  private final int x;
-  private final int y;
+  public final int x;
+  public final int y;
 
   public Coordinates(int x, int y) {
     if (x < 0 || y < 0) {
@@ -20,13 +19,26 @@ public class Coordinates {
     this.y = y;
   }
 
+  boolean isBiggerThan(Coordinates coordinates) {
+    return x > coordinates.x && y > coordinates.y;
+  }
+
   @Override
   public String toString() {
     return x + " " + y;
   }
 
-  boolean isBiggerThan(Coordinates coordinates) {
-    return x > coordinates.x && y > coordinates.y;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Coordinates that = (Coordinates) o;
+    return x == that.x &&
+            y == that.y;
   }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(x, y);
+  }
 }

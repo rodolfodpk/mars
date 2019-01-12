@@ -2,7 +2,6 @@ package com.rdpk.mars.rest;
 
 import com.rdpk.mars.command.PlateauCommandHandler;
 import com.rdpk.mars.command.PlateauRepository;
-import com.rdpk.mars.domain.Coordinates;
 import com.rdpk.mars.domain.Plateau;
 import com.rdpk.mars.read.PlateauReadModel;
 import com.rdpk.mars.read.PlateauReadRepository;
@@ -25,13 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.rdpk.mars.domain.Direction.EAST;
-import static com.rdpk.mars.domain.Direction.NORTH;
-import static com.rdpk.mars.domain.MoveRoverAction.TURN_LEFT;
-import static com.rdpk.mars.domain.MoveRoverAction.TURN_RIGHT;
-import static com.rdpk.mars.domain.MoveRoverAction.WALK;
-import static java.util.Arrays.asList;
-
 class MarsRestServer extends AbstractVerticle {
 
   static Integer httpPort = 8080;
@@ -50,8 +42,6 @@ class MarsRestServer extends AbstractVerticle {
   }
 
   public void start(Future future) {
-
-    runEvidenceUseCase();
 
     // Load the api spec. This operation is asynchronous
     OpenAPI3RouterFactory.create(this.vertx, "mars-api.yaml", openAPI3RouterFactoryAsyncResult -> {
@@ -125,24 +115,6 @@ class MarsRestServer extends AbstractVerticle {
         }
       });
     });
-
-  }
-
-  /**
-   * Just for testing purposes
-   */
-  private void runEvidenceUseCase() {
-
-    Plateau plateau =  new Plateau("teste1");
-    plateau.resize(new Coordinates(5, 5));
-
-    // rover 1
-    plateau.activate(new Coordinates(1, 2), NORTH);
-    plateau.move(asList(TURN_LEFT, WALK, TURN_LEFT, WALK, TURN_LEFT, WALK, TURN_LEFT, WALK, WALK));
-    // rover 2
-    plateau.activate(new Coordinates(3, 3), EAST);
-    plateau.move(asList(WALK, WALK, TURN_RIGHT, WALK, WALK, TURN_RIGHT, WALK, TURN_RIGHT, TURN_RIGHT, WALK));
-    storage.put(plateau.name, plateau);
 
   }
 
