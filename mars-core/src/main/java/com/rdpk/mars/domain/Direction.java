@@ -1,5 +1,6 @@
 package com.rdpk.mars.domain;
 
+
 /**
  * Rover direction
  */

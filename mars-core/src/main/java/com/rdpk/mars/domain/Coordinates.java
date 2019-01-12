@@ -28,4 +28,5 @@ public class Coordinates {
   boolean isBiggerThan(Coordinates coordinates) {
     return x > coordinates.x && y > coordinates.y;
   }
+
 }

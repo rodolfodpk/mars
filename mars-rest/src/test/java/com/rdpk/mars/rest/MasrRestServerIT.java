@@ -92,8 +92,8 @@ class MasrRestServerIT {
   @DisplayName("GET /plateaus")
   @Test
   void a1(VertxTestContext tc) {
-    String expected = "[{\"id\":\"teste1\",\"x\":5,\"y\":5,\"rovers\":[{\"x\":5,\"y\":1,\"direction\":\"E\"},{\"x\":1," +
-            "\"y\":3,\"direction\":\"N\"}],\"activeRover\":{\"x\":5,\"y\":1,\"direction\":\"E\"}}]";
+    String expected = "[{\"id\":\"teste1\",\"x\":5,\"y\":5,\"rovers\":[{\"x\":5,\"y\":1,\"direction\":\"E\"}," +
+            "{\"x\":1,\"y\":3,\"direction\":\"N\"}],\"activeRover\":{\"x\":5,\"y\":1,\"direction\":\"E\"}}]";
     client
       .get(MarsRestServer.httpPort, HOST, "/plateaus")
       .expect(ResponsePredicate.SC_SUCCESS)

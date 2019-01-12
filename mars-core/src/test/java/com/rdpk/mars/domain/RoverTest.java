@@ -23,7 +23,7 @@ class RoverTest {
 
   @BeforeAll
   static void setUp() {
-    rover = new Rover(new Coordinates(1, 1), Direction.NORTH);
+    rover = new Rover(new Coordinates(1, 1), NORTH);
     directionsByName = new HashMap<>();
     directionsByName.put("NORTH", NORTH);
     directionsByName.put("SOUTH", SOUTH);
