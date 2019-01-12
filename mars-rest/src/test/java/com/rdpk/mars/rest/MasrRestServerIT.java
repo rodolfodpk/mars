@@ -37,7 +37,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MasrRestServerIT {
 
-  static Plateau plateau;
   static MarsRestServer verticle;
   static WebClient client;
   static String HOST =  "0.0.0.0";
@@ -61,7 +60,7 @@ class MasrRestServerIT {
     PlateauCommandHandler commandHandler = new PlateauCommandHandler(new PlateauRepository(storage));
     PlateauReadRepository repository = new PlateauReadRepository(storage);
 
-    plateau = new Plateau("teste1");
+    Plateau plateau = new Plateau("teste1");
     plateau.resize(new Coordinates(5, 5));
     // rover 1
     plateau.activate(new Coordinates(1, 2), NORTH);
