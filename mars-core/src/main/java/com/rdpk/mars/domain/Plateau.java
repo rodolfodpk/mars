@@ -1,17 +1,18 @@
 package com.rdpk.mars.domain;
 
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Plateau {
 
+  public AtomicInteger generator = new AtomicInteger();
+
   public final String name;
   public Coordinates topRight;
-  public Set<Rover> rovers = new HashSet<>();
+  public SortedSet<Rover> rovers = new TreeSet<>(Comparator.comparing(Rover::toString));
   public Rover activeRover;
+
 
   public Plateau(String name) {
     this.name = name;
@@ -29,17 +30,17 @@ public class Plateau {
     if (target.isPresent()) {
       activeRover = target.get();
     } else {
-      activeRover = new Rover(location, direction);
+      activeRover = new Rover(generator.incrementAndGet(), location, direction);
       rovers.add(activeRover);
     }
-//    System.out.println("after activate \n" + this);
+    System.out.println("after activate \n" + this);
   }
 
   public void move(List<MoveRoverAction> moves) {
     if (activeRover == null) {
       throw new IllegalStateException("Before moving a rover you must to activate it");
     }
-//    System.out.println("before move \n" + this);
+    System.out.println("before move \n" + this);
     rovers.remove(activeRover);
     moves.forEach(move -> {
       switch (move) {
@@ -48,10 +49,10 @@ public class Plateau {
         case TURN_RIGHT: activeRover.turnToRight(); break;
         default: System.out.println("oops");
       }
-//      System.out.println(activeRover);
+      System.out.println(activeRover);
     });
     rovers.add(activeRover);
-//    System.out.println("after activate \n" + this);
+    System.out.println("after activate \n" + this);
   }
 
   boolean isLocationBusy(Coordinates newLocation) {
@@ -63,10 +64,25 @@ public class Plateau {
   }
 
   @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Plateau plateau = (Plateau) o;
+    return name.equals(plateau.name);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name);
+  }
+
+  @Override
   public String toString() {
     return "Plateau{" +
             "name='" + name + '\'' +
             ", topRight=" + topRight +
+            ", rovers=" + rovers +
+            ", activeRover=" + activeRover +
             '}';
   }
 }

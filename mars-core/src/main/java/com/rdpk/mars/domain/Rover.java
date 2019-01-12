@@ -2,15 +2,17 @@ package com.rdpk.mars.domain;
 
 import java.util.Objects;
 
-public class Rover {
+public class Rover implements Comparable<Rover> {
 
-  public Coordinates location;
-  public Direction direction;
-
-  Rover(Coordinates location, Direction direction) {
+  public Rover(int id, Coordinates location, Direction direction) {
+    this.id = id;
     this.location = location;
     this.direction = direction;
   }
+
+  public Integer id;
+  public Coordinates location;
+  public Direction direction;
 
   /**
    * Turn to left
@@ -65,25 +67,32 @@ public class Rover {
 
   }
 
+
+  @Override
+  public int compareTo(Rover rover) {
+    return rover.id.compareTo(this.id);
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Rover rover = (Rover) o;
-    return location.equals(rover.location) &&
-            direction == rover.direction;
+    return id.equals(rover.id);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(location, direction);
+    return Objects.hash(id);
   }
 
   @Override
   public String toString() {
     return "Rover{" +
-            "location=" + location +
+            "id=" + id +
+            ", location=" + location +
             ", direction=" + direction +
             '}';
   }
+
 }

@@ -26,7 +26,7 @@ public class PlateauReadRepository {
   }
 
   private RoverReadModel convert(Rover rover) {
-    return new RoverReadModel(rover.location.x, rover.location.y,
+    return new RoverReadModel(rover.id, rover.location.x, rover.location.y,
             rover.direction.name().substring(0, 1).toUpperCase());
   }
 
