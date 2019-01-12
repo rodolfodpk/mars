@@ -39,25 +39,40 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /plateaus/{plateauId}/commands/create:
     post:
       summary: Create a plateau
       operationId: createPlateaus
       tags:
         - plateaus
+      parameters:
+        - name: plateauId
+          in: path
+          required: true
+          description: The id of the plateau to retrieve
+          schema:
+            type: string
       requestBody:
         content:
           "application/json":
             schema:
-              $ref: "#/components/schemas/Plateau"
+              $ref: "#/components/schemas/PlateauCreateCommand"
       responses:
-        201:
-          description: Null response
+        303:
+          description: Null response, see Location header
+          headers:
+            Location:
+              schema:
+                type: string
+              description: Url to get the resulting plateau read model.
         default:
           description: unexpected error
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+
+
   /plateaus/{plateauId}:
     get:
       summary: Info for a specific plateau
@@ -88,6 +103,15 @@ paths:
                 $ref: "#/components/schemas/Error"
 components:
   schemas:
+    PlateauCreateCommand:
+      type: object
+      properties:
+        x:
+          type: integer
+          format: int64
+        y:
+          type: integer
+          format: int64
     Plateau:
       type: object
       required:
@@ -99,8 +123,6 @@ components:
           type: integer
           format: int64
         name:
-          type: string
-        tag:
           type: string
     Plateaus:
       type: array

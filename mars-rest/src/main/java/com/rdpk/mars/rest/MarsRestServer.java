@@ -1,16 +1,20 @@
 package com.rdpk.mars.rest;
 
+import com.rdpk.mars.command.CreateCommand;
 import com.rdpk.mars.command.PlateauCommandHandler;
 import com.rdpk.mars.command.PlateauRepository;
+import com.rdpk.mars.command.ResizeAreaCommand;
+import com.rdpk.mars.domain.Coordinates;
 import com.rdpk.mars.domain.Plateau;
 import com.rdpk.mars.read.PlateauReadModel;
 import com.rdpk.mars.read.PlateauReadRepository;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
-import io.vertx.core.Vertx;
+import io.vertx.core.Launcher;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
@@ -19,26 +23,33 @@ import io.vertx.ext.web.api.RequestParameters;
 import io.vertx.ext.web.api.contract.RouterFactoryOptions;
 import io.vertx.ext.web.api.contract.openapi3.OpenAPI3RouterFactory;
 import io.vertx.ext.web.api.validation.ValidationException;
+import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.LoggerHandler;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-class MarsRestServer extends AbstractVerticle {
+public class MarsRestServer extends AbstractVerticle {
 
   static Integer httpPort = 8080;
   static HttpServer server;
 
   static Logger logger = LoggerFactory.getLogger("MarsRestServer");
 
-  final Map<String, Plateau> storage ;
+  final ConcurrentHashMap<String, Plateau> storage ;
   final PlateauCommandHandler commandHandler;
   final PlateauReadRepository repository;
 
-  MarsRestServer(Map<String, Plateau> storage, PlateauCommandHandler commandHandler, PlateauReadRepository repository) {
+  MarsRestServer(ConcurrentHashMap<String, Plateau> storage, PlateauCommandHandler commandHandler, PlateauReadRepository repository) {
     this.storage = storage;
     this.commandHandler = commandHandler;
     this.repository = repository;
+  }
+
+  public MarsRestServer() {
+    storage = new ConcurrentHashMap<>();
+    commandHandler = new PlateauCommandHandler(new PlateauRepository(storage));
+    repository = new PlateauReadRepository(storage);
   }
 
   public void start(Future future) {
@@ -76,6 +87,24 @@ class MarsRestServer extends AbstractVerticle {
                 .end(Json.encodePrettily(plateaus));
       });
 
+      // Add an handler with operationId
+      routerFactory.addHandlerByOperationId("createPlateaus", ctx -> {
+        JsonObject command = ctx.getBodyAsJson();
+        // Load the parsed parameters
+        RequestParameters params = ctx.get("parsedParameters");
+        // Handle listPlateaus operation
+        String idParam = params.pathParameter("plateauId").getString();
+        CreateCommand createCommand = new CreateCommand(idParam);
+        commandHandler.create(createCommand);
+        Coordinates coordinates = new Coordinates(command.getInteger("x"), command.getInteger("y"));
+        ResizeAreaCommand resizeAreaCommand = new ResizeAreaCommand(idParam, coordinates);
+        commandHandler.resize(resizeAreaCommand);
+        ctx.response()
+                .putHeader("Location", String.format("/plateaus/%s", idParam))
+                .setStatusCode(201)
+                .setStatusMessage("Created - Look to Location header")
+                .end();
+      });
 
       // Add a failure handler
       routerFactory.addFailureHandlerByOperationId("listPlateaus", routingContext -> {
@@ -103,6 +132,9 @@ class MarsRestServer extends AbstractVerticle {
       // Now you have to generate the router
       Router router = routerFactory.setOptions(factoryOptions).getRouter();
 
+      router.route().handler(BodyHandler.create());
+      router.route().handler(LoggerHandler.create());
+
       // Now you can use your Router instance
       server = vertx.createHttpServer(new HttpServerOptions().setPort(httpPort).setHost("0.0.0.0"));
       server.requestHandler(router).listen((ar) ->  {
@@ -125,15 +157,7 @@ class MarsRestServer extends AbstractVerticle {
   // Convenience method so you can run it in your IDE
   public static void main(String[] args) {
 
-    Map<String, Plateau> storage = new ConcurrentHashMap<>();
-    PlateauCommandHandler commandHandler = new PlateauCommandHandler(new PlateauRepository(storage));
-    PlateauReadRepository repository = new PlateauReadRepository(storage);
-
-    MarsRestServer verticle = new MarsRestServer(storage, commandHandler, repository);
-
-    Vertx.vertx().deployVerticle(verticle);
-
-    System.out.println("welcome to mars REST server!");
+    Launcher.executeCommand("run", MarsRestServer.class.getName());
 
   }
 

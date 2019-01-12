@@ -2,20 +2,21 @@ package com.rdpk.mars.command;
 
 import com.rdpk.mars.domain.Plateau;
 
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PlateauRepository {
 
-  private final Map<String, Plateau> storage;
+  private final ConcurrentHashMap<String, Plateau> storage;
 
-  public PlateauRepository(Map<String, Plateau> storage) {
+  public PlateauRepository(ConcurrentHashMap<String, Plateau> storage) {
     this.storage = storage;
   }
 
-  void create(String name) {
-    if (storage.containsKey(name))
-      throw new IllegalArgumentException(String.format("Plateau %s already exists", name));
-    storage.put(name,new Plateau(name) );
+  void create(String id) {
+    if (storage.containsKey(id))
+      throw new IllegalArgumentException(String.format("Plateau %s already exists", id));
+    storage.put(id, new Plateau(id));
+    System.out.println("added to " + storage.get(id));
   }
 
   Plateau findByName(String name) {

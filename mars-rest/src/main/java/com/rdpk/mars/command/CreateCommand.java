@@ -7,4 +7,11 @@ public class CreateCommand {
   public CreateCommand(String id) {
     this.id = id;
   }
+
+  @Override
+  public String toString() {
+    return "CreateCommand{" +
+            "id='" + id + '\'' +
+            '}';
+  }
 }

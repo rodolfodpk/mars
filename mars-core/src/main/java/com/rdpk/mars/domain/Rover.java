@@ -4,15 +4,15 @@ import java.util.Objects;
 
 public class Rover implements Comparable<Rover> {
 
+  public final Integer id;
+  public Coordinates location;
+  public Direction direction;
+
   public Rover(int id, Coordinates location, Direction direction) {
     this.id = id;
     this.location = location;
     this.direction = direction;
   }
-
-  public Integer id;
-  public Coordinates location;
-  public Direction direction;
 
   /**
    * Turn to left

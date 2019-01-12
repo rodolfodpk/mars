@@ -6,13 +6,14 @@ import com.rdpk.mars.command.PlateauRepository;
 import com.rdpk.mars.domain.Coordinates;
 import com.rdpk.mars.domain.Plateau;
 import com.rdpk.mars.read.PlateauReadRepository;
-import io.vertx.codegen.annotations.Nullable;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.client.predicate.ResponsePredicate;
+import io.vertx.ext.web.codec.BodyCodec;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,22 +23,22 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.net.ServerSocket;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.rdpk.mars.domain.Direction.EAST;
 import static com.rdpk.mars.domain.Direction.NORTH;
 import static com.rdpk.mars.domain.MoveRoverAction.*;
 import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(VertxExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MasrRestServerIT {
 
-  static MarsRestServer verticle;
+  static MarsRestServer1 verticle;
   static WebClient client;
   static String HOST =  "0.0.0.0";
-  static Map<String, Plateau> storage;
+  static ConcurrentHashMap<String, Plateau> storage;
 
   private static int httpPort() {
     int httpPort = 0;
@@ -58,10 +59,10 @@ class MasrRestServerIT {
     PlateauCommandHandler commandHandler = new PlateauCommandHandler(new PlateauRepository(storage));
     PlateauReadRepository repository = new PlateauReadRepository(storage);
 
-    verticle = new MarsRestServer(storage, commandHandler, repository);
+    verticle = new MarsRestServer1(storage, commandHandler, repository);
 
     System.out.println("will try to get an avaliable port");
-    verticle.httpPort = httpPort();
+    MarsRestServer1.httpPort = httpPort();
     System.out.println("will try to deploy MainVerticle using HTTP_PORT = " + verticle.httpPort);
     client = WebClient.create(vertx);
     vertx.executeBlocking(event -> vertx.deployVerticle(verticle, deploy -> {
@@ -88,26 +89,39 @@ class MasrRestServerIT {
     plateau.activate(new Coordinates(3, 3), EAST);
     plateau.move(asList(WALK, WALK, TURN_RIGHT, WALK, WALK, TURN_RIGHT, WALK, TURN_RIGHT, TURN_RIGHT, WALK));
     storage.put(plateau.name, plateau);
-    // TODO rovers in order, please
     String expected1 = "[{\"id\":\"teste1\",\"x\":5,\"y\":5,\"rovers\":[{\"id\":1,\"x\":1,\"y\":3,\"direction\":\"N\"},{\"id\":2,\"x\":5,\"y\":1,\"direction\":\"E\"}],\"activeRover\":{\"id\":2,\"x\":5,\"y\":1,\"direction\":\"E\"}}]";
-    String expected2 = "[{\"id\":\"teste1\",\"x\":5,\"y\":5,\"rovers\":[{\"id\":2,\"x\":5,\"y\":1,\"direction\":\"E\"},{\"id\":1,\"x\":1,\"y\":3,\"direction\":\"N\"}],\"activeRover\":{\"id\":2,\"x\":5,\"y\":1,\"direction\":\"E\"}}]";
     client
-      .get(MarsRestServer.httpPort, HOST, "/plateaus")
+      .get(MarsRestServer1.httpPort, HOST, "/plateaus")
       .expect(ResponsePredicate.SC_SUCCESS)
       .expect(ResponsePredicate.JSON)
-      .send(tc.succeeding(response2 -> tc.verify(() -> {
-            @Nullable JsonArray json = response2.bodyAsJsonArray();
-            System.out.println("Received response with status code " + response2.statusCode() + " with body \n" +
-                    json.encodePrettily());
-            String received = json.toString();
-            if (received.equals(expected1) || received.equals(expected2)) {
-              tc.completeNow();
-              return;
-            }
-            tc.failNow(new RuntimeException("unexpected response : " +  received));
+      .send(tc.succeeding(response -> tc.verify(() -> {
+            JsonArray array = response.bodyAsJsonArray();
+            assertThat(1).isEqualTo(array.size());
+            String received = array.toString();
+            assertThat(200).isEqualTo(response.statusCode());
+            assertThat(expected1).isEqualTo(received);
+            tc.completeNow();
           })
         )
       );
+  }
+
+  @DisplayName("POST /plateaus/p1/commands/create")
+  @Test
+  void a2(VertxTestContext tc) {
+    storage.clear();
+    JsonObject request = new JsonObject().put("y", 5).put("x", 5);
+    client
+      .post(MarsRestServer1.httpPort, HOST, "/plateaus/p1/commands/create")
+      .as(BodyCodec.jsonObject())
+      .sendJson(request, tc.succeeding(response -> tc.verify(() -> {
+          assertThat(201).isEqualTo(response.statusCode());
+          assertThat(response.bodyAsString()).isNull();
+          assertThat(response.getHeader("Location")).isEqualTo("/plateaus/p1");
+          tc.completeNow();
+        })
+      )
+    );
   }
 
 }

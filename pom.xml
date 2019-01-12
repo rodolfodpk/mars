@@ -16,7 +16,7 @@
         <sl4j.version>1.7.9</sl4j.version>
         <vertx.version>3.6.0</vertx.version>
         <fabric8-vertx-maven-plugin.projectVersion>1.0.13</fabric8-vertx-maven-plugin.projectVersion>
-        <vertx.verticle>com.rdpk.mars.rest</vertx.verticle>
+        <vertx.verticle>com.rdpk.mars.rest.MarsRestServer1</vertx.verticle>
 
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -127,52 +127,54 @@
                 </configuration>
             </plugin>
 
-            <!--<plugin>-->
-            <!--<artifactId>maven-shade-plugin</artifactId>-->
-            <!--<version>3.2.1</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<phase>package</phase>-->
-            <!--<goals>-->
-            <!--<goal>shade</goal>-->
-            <!--</goals>-->
-            <!--<configuration>-->
-            <!--<transformers>-->
-            <!--<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
-            <!--<manifestEntries>-->
-            <!--<Main-Class>io.vertx.core.Launcher</Main-Class>-->
-            <!--<Main-Verticle>${vertx.verticle}</Main-Verticle>-->
-            <!--</manifestEntries>-->
-            <!--</transformer>-->
-            <!--<transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">-->
-            <!--<resource>META-INF/services/io.vertx.core.spi.VerticleFactory</resource>-->
-            <!--</transformer>-->
-            <!--</transformers>-->
-            <!--<artifactSet></artifactSet>-->
-            <!--<outputFile>${project.build.directory}/${project.artifactId}.jar</outputFile>-->
-            <!--</configuration>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
+            <plugin>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <Main-Class>io.vertx.core.Launcher</Main-Class>
+                                        <Main-Verticle>${vertx.verticle}</Main-Verticle>
+                                    </manifestEntries>
+                                </transformer>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/services/io.vertx.core.spi.VerticleFactory</resource>
+                                </transformer>
+                            </transformers>
+                            <artifactSet></artifactSet>
+                            <outputFile>${project.build.directory}/${project.artifactId}.jar</outputFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
-            <!--<plugin>-->
-            <!--<groupId>io.fabric8</groupId>-->
-            <!--<artifactId>vertx-maven-plugin</artifactId>-->
-            <!--<version>${fabric8-vertx-maven-plugin.projectVersion}</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<id>vmp-init-package</id>-->
-            <!--<goals>-->
-            <!--<goal>initialize</goal>-->
-            <!--<goal>package</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--<configuration>-->
-            <!--<appId>${artifactId}</appId>-->
-            <!--<redeploy>true</redeploy>-->
-            <!--</configuration>-->
-            <!--</plugin>-->
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>vertx-maven-plugin</artifactId>
+                <version>${fabric8-vertx-maven-plugin.projectVersion}</version>
+                <executions>
+                    <execution>
+                        <id>vmp-init-package</id>
+                        <goals>
+                            <goal>initialize</goal>
+                            <goal>package</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <appId>${artifactId}</appId>
+                    <redeploy>true</redeploy>
+                </configuration>
+            </plugin>
 
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
