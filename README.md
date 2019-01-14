@@ -27,9 +27,9 @@ cd mars-rest
 
 ## Random notes
 
-* Acceptance tests for REST app would be much easier with [JUnit 5 execution order] (https://junit.org/junit5/docs/snapshot/user-guide/#writing-tests-test-execution-order)
+* Acceptance tests for REST app would be much easier with [JUnit 5 execution order](https://junit.org/junit5/docs/snapshot/user-guide/#writing-tests-test-execution-order)
 since with Vert.x WebClient I would reach a callback hell. I didn't tried to use the JUnit 5 snapshot.
-* I tried to use https://vertx.io/docs/vertx-web-api-contract/java/ but gave up since i'm not proficient with it yet. 
+* I tried to use [Vertx's OpenApi contract](https://vertx.io/docs/vertx-web-api-contract/java/) but gave up since i'm not proficient with it yet. 
 * Error cases are probably still untested (only happy paths scenarios are tested so far)
 
 ## Developer notes
@@ -38,7 +38,9 @@ since with Vert.x WebClient I would reach a callback hell. I didn't tried to use
 
 ``
 mvn clean install
+
 cd mars-rest
+
 mvn vertx:run
 ``
 
@@ -46,6 +48,9 @@ mvn vertx:run
 
 ``
 mvn javadocs:javadocs
+``
+
+Then these access:
 [mars-core](mars-core/target/site/apidocs/index-all.html)
 [mars-rest](mars-rest/target/site/apidocs/index-all.html)
-``
+
