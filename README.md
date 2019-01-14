@@ -25,6 +25,5 @@ mvn clean install
 * Acceptance tests for REST app would be much easier with [JUnit 5 execution order] (https://junit.org/junit5/docs/snapshot/user-guide/#writing-tests-test-execution-order)
 since with Vert.x WebClient I would reach a callback hell. I didn't tried to use the JUnit 5 snapshot.
 * I tried to use https://vertx.io/docs/vertx-web-api-contract/java/ but gave up since i'm not proficient with it yet. 
-* Error cases are probably still untested (only happy paths are tested so far)
+* Error cases are probably still untested (only happy paths scenarios are tested so far)
 
-## 
