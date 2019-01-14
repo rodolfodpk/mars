@@ -4,6 +4,9 @@ package com.rdpk.mars.domain;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Mar's Plateau to be explored
+ */
 public class Plateau {
 
   private AtomicInteger generator = new AtomicInteger();

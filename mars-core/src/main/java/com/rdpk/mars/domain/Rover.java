@@ -2,6 +2,9 @@ package com.rdpk.mars.domain;
 
 import java.util.Objects;
 
+/**
+ * Rover to explore Mars plateaus
+ */
 public class Rover implements Comparable<Rover> {
 
   public final Integer id;

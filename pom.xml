@@ -247,6 +247,49 @@
                 </dependencies>
             </plugin>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <groups>
+                        <group>
+                            <title>Core Domain</title>
+                            <packages>com.rdpk.mars.domain</packages>
+                        </group>
+                        <group>
+                            <title>REST app</title>
+                            <packages>com.rdpk.mars.rest</packages>
+                        </group>
+                        <group>
+                            <title>Command model</title>
+                            <packages>com.rdpk.mars.rest.command</packages>
+                        </group>
+                        <group>
+                            <title>Read model</title>
+                            <packages>com.rdpk.mars.rest.read</packages>
+                        </group>
+                    </groups>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>javadoc-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <!-- switch on dependency-driven aggregation -->
+                            <includeDependencySources>false</includeDependencySources>
+                            <dependencySourceExcludes>
+                                <!-- exclude ONLY commons-cli artifacts -->
+                                <dependencySourceExclude>commons-lang:*</dependencySourceExclude>
+                            </dependencySourceExcludes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
 
     </build>
