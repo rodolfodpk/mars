@@ -6,13 +6,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Plateau {
 
-  public AtomicInteger generator = new AtomicInteger();
+  private AtomicInteger generator = new AtomicInteger();
 
   public final String name;
   public Coordinates topRight;
   public SortedSet<Rover> rovers = new TreeSet<>(Comparator.comparing(Rover::toString));
   public Rover activeRover;
-
 
   public Plateau(String name) {
     this.name = name;
@@ -44,10 +43,17 @@ public class Plateau {
     rovers.remove(activeRover);
     moves.forEach(move -> {
       switch (move) {
-        case WALK: activeRover.moveForward(this); break;
-        case TURN_LEFT: activeRover.turnToLeft(); break;
-        case TURN_RIGHT: activeRover.turnToRight(); break;
-        default: System.out.println("oops");
+        case WALK:
+          activeRover.moveForward(this);
+          break;
+        case TURN_LEFT:
+          activeRover.turnToLeft();
+          break;
+        case TURN_RIGHT:
+          activeRover.turnToRight();
+          break;
+        default:
+          System.out.println("oops");
       }
       System.out.println(activeRover);
     });

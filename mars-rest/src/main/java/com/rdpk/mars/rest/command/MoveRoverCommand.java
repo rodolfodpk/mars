@@ -1,4 +1,4 @@
-package com.rdpk.mars.command;
+package com.rdpk.mars.rest.command;
 
 import com.rdpk.mars.domain.MoveRoverAction;
 

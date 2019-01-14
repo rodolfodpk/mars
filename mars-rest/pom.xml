@@ -1,62 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>com.rdpk</groupId>
-		<artifactId>mars</artifactId>
-		<version>1.0-SNAPSHOT</version>
-	</parent>
+    <parent>
+        <groupId>com.rdpk</groupId>
+        <artifactId>mars</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 
-	<artifactId>mars-rest</artifactId>
-	<packaging>jar</packaging>
+    <properties>
+        <jackson.version>2.9.6</jackson.version>
+    </properties>
 
-	<dependencies>
+    <artifactId>mars-rest</artifactId>
+    <packaging>jar</packaging>
 
-		<dependency>
-			<groupId>com.rdpk</groupId>
-			<artifactId>mars-core</artifactId>
-		</dependency>
+    <dependencies>
 
-		<!-- vertx -->
-
-		<dependency>
-			<groupId>io.vertx</groupId>
-			<artifactId>vertx-core</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>io.vertx</groupId>
-			<artifactId>vertx-web</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>io.vertx</groupId>
-			<artifactId>vertx-web-api-contract</artifactId>
+        <dependency>
+            <groupId>com.rdpk</groupId>
+            <artifactId>mars-core</artifactId>
         </dependency>
 
-		<!-- test -->
+        <!-- vertx -->
 
-		<dependency>
-			<groupId>io.vertx</groupId>
-			<artifactId>vertx-junit5</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-core</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>io.vertx</groupId>
-			<artifactId>vertx-web-client</artifactId>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-web</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<version>2.23.0</version>
-			<scope>test</scope>
-		</dependency>
+        <!--<dependency>-->
+        <!--<groupId>io.vertx</groupId>-->
+        <!--<artifactId>vertx-web-api-contract</artifactId>-->
+        <!--</dependency>-->
 
-	</dependencies>
+        <!-- test -->
+
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-web-client</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
 
 
 </project>

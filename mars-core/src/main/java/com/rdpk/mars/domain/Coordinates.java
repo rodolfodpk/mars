@@ -12,7 +12,7 @@ public class Coordinates {
 
   public Coordinates(int x, int y) {
     if (x < 0 || y < 0) {
-      String error =  String.format("Invalid coordinate. Both x [%d] and y [%d] must zero or positive ", x, y);
+      String error = String.format("Invalid coordinate. Both x [%d] and y [%d] must zero or positive ", x, y);
       throw new IllegalArgumentException(error);
     }
     this.x = x;

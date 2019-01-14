@@ -1,4 +1,4 @@
-package com.rdpk.mars.command;
+package com.rdpk.mars.rest.command;
 
 import com.rdpk.mars.domain.Plateau;
 
@@ -16,7 +16,6 @@ public class PlateauRepository {
     if (storage.containsKey(id))
       throw new IllegalArgumentException(String.format("Plateau %s already exists", id));
     storage.put(id, new Plateau(id));
-    System.out.println("added to " + storage.get(id));
   }
 
   Plateau findByName(String name) {

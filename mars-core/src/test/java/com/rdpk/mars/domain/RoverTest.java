@@ -38,9 +38,9 @@ class RoverTest {
   @ValueSource(strings = {"NORTH WEST", "WEST SOUTH", "SOUTH EAST", "EAST NORTH"})
   void a1(String rule) {
     String[] terms = rule.split(" ");
-     assertThat(rover.direction).isEqualTo(directionsByName.get(terms[0]));
-     rover.turnToLeft();
-     assertThat(rover.direction).isEqualTo(directionsByName.get(terms[1]));
+    assertThat(rover.direction).isEqualTo(directionsByName.get(terms[0]));
+    rover.turnToLeft();
+    assertThat(rover.direction).isEqualTo(directionsByName.get(terms[1]));
   }
 
   @DisplayName("it can turn to right")

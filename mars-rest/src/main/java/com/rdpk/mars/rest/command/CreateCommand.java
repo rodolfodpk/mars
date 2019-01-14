@@ -1,4 +1,4 @@
-package com.rdpk.mars.command;
+package com.rdpk.mars.rest.command;
 
 public class CreateCommand {
 

@@ -19,11 +19,20 @@ public class Rover implements Comparable<Rover> {
    */
   void turnToLeft() {
     switch (direction) {
-      case NORTH: direction = Direction.WEST; break;
-      case SOUTH: direction = Direction.EAST; break;
-      case EAST: direction = Direction.NORTH; break;
-      case WEST: direction = Direction.SOUTH; break;
-      default: System.out.println("oops");
+      case NORTH:
+        direction = Direction.WEST;
+        break;
+      case SOUTH:
+        direction = Direction.EAST;
+        break;
+      case EAST:
+        direction = Direction.NORTH;
+        break;
+      case WEST:
+        direction = Direction.SOUTH;
+        break;
+      default:
+        System.out.println("oops");
     }
   }
 
@@ -32,11 +41,20 @@ public class Rover implements Comparable<Rover> {
    */
   void turnToRight() {
     switch (direction) {
-      case NORTH: direction = Direction.EAST; break;
-      case SOUTH: direction = Direction.WEST; break;
-      case EAST: direction = Direction.SOUTH; break;
-      case WEST: direction = Direction.NORTH; break;
-      default: System.out.println("oops");
+      case NORTH:
+        direction = Direction.EAST;
+        break;
+      case SOUTH:
+        direction = Direction.WEST;
+        break;
+      case EAST:
+        direction = Direction.SOUTH;
+        break;
+      case WEST:
+        direction = Direction.NORTH;
+        break;
+      default:
+        System.out.println("oops");
     }
   }
 
@@ -48,11 +66,20 @@ public class Rover implements Comparable<Rover> {
     Coordinates newLocation = null;
 
     switch (direction) {
-      case NORTH: newLocation = new Coordinates(location.x, location.y + 1); break;
-      case SOUTH: newLocation = new Coordinates(location.x, location.y - 1); break;
-      case EAST: newLocation = new Coordinates(location.x + 1, location.y); break;
-      case WEST: newLocation = new Coordinates(location.x - 1, location.y); break;
-      default: System.out.println("oops");
+      case NORTH:
+        newLocation = new Coordinates(location.x, location.y + 1);
+        break;
+      case SOUTH:
+        newLocation = new Coordinates(location.x, location.y - 1);
+        break;
+      case EAST:
+        newLocation = new Coordinates(location.x + 1, location.y);
+        break;
+      case WEST:
+        newLocation = new Coordinates(location.x - 1, location.y);
+        break;
+      default:
+        System.out.println("oops");
     }
 
     if (plateau.isLocationBusy(newLocation)) {

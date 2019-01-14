@@ -1,4 +1,4 @@
-package com.rdpk.mars.read;
+package com.rdpk.mars.rest.read;
 
 class RoverReadModel {
 

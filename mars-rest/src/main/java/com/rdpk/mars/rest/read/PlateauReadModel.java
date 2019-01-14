@@ -1,4 +1,4 @@
-package com.rdpk.mars.read;
+package com.rdpk.mars.rest.read;
 
 import java.util.List;
 
@@ -17,4 +17,5 @@ public class PlateauReadModel {
     this.rovers = rovers;
     this.activeRover = activeRover;
   }
+
 }
