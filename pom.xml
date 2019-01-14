@@ -31,6 +31,7 @@
     <modules>
         <module>mars-core</module>
         <module>mars-rest</module>
+        <module>mars-console</module>
     </modules>
 
     <dependencyManagement>
@@ -52,7 +53,6 @@
 
     <dependencies>
 
-        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
@@ -118,55 +118,6 @@
                     <!--<annotationProcessors>-->
                     <!--<annotationProcessor>dagger.internal.codegen.ComponentProcessor</annotationProcessor>-->
                     <!--</annotationProcessors>-->
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.1</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <transformers>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <manifestEntries>
-                                        <Main-Class>io.vertx.core.Launcher</Main-Class>
-                                        <Main-Verticle>${vertx.verticle}</Main-Verticle>
-                                    </manifestEntries>
-                                </transformer>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                    <resource>META-INF/services/io.vertx.core.spi.VerticleFactory</resource>
-                                </transformer>
-                            </transformers>
-                            <artifactSet></artifactSet>
-                            <outputFile>${project.build.directory}/${project.artifactId}.jar</outputFile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>io.fabric8</groupId>
-                <artifactId>vertx-maven-plugin</artifactId>
-                <version>${fabric8-vertx-maven-plugin.projectVersion}</version>
-                <executions>
-                    <execution>
-                        <id>vmp-init-package</id>
-                        <goals>
-                            <goal>initialize</goal>
-                            <goal>package</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <appId>${artifactId}</appId>
-                    <redeploy>true</redeploy>
                 </configuration>
             </plugin>
 

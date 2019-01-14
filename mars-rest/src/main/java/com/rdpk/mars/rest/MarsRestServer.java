@@ -101,6 +101,7 @@ public class MarsRestServer extends AbstractVerticle {
 
     router.post("/plateaus/:plateauId/commands/activate").handler(ctx -> {
       JsonObject json = ctx.getBody().toJsonObject();
+      System.out.println(json.encodePrettily());
       String idParam = ctx.pathParam("plateauId");
       Coordinates target = new Coordinates(json.getInteger("x"), json.getInteger("y"));
       Direction direction = translateDirection(json.getString("direction"));
@@ -145,7 +146,7 @@ public class MarsRestServer extends AbstractVerticle {
   }
 
   static Direction translateDirection(String character) {
-    switch (character) {
+    switch (character.toUpperCase()) {
       case "N":
         return NORTH;
       case "S":
@@ -160,7 +161,6 @@ public class MarsRestServer extends AbstractVerticle {
   }
 
   static MoveRoverAction translateMoveAction(Character character) {
-    System.out.println(character);
     switch (character) {
       case 'L':
         return TURN_LEFT;

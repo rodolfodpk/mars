@@ -7,9 +7,12 @@
 
 ```
 mvn clean install
-cd mars-rest
+java -jar mars-rest/target/mars-rest.jar 
+```
 
-
+Then in another window (this app will talk with REST api)
+```
+mvn exec:java
 ```
 
 ## These rules are assumed
@@ -31,18 +34,19 @@ cd mars-rest
 since with Vert.x WebClient I would reach a callback hell. I didn't tried to use the JUnit 5 snapshot.
 * I tried to use [Vertx's OpenApi contract](https://vertx.io/docs/vertx-web-api-contract/java/) but gave up since i'm not proficient with it yet. 
 * Error cases are probably still untested (only happy paths scenarios are tested so far)
+* Sometimes I really was not careful with commit messages 
 
 ## Developer notes
 
 * To run the rest app with code changes reload:
 
-``
+``` 
 mvn clean install
 
 cd mars-rest
 
 mvn vertx:run
-``
+```
 
 * Javadocs are avaliable:
 

@@ -9,6 +9,7 @@ public class PlateauCommandHandler {
   }
 
   public void create(CreateCommand cmd) {
+    if (repository.findByName(cmd.id) !=null) return ; // idempotent
     repository.create(cmd.id);
   }
 
