@@ -6,7 +6,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import java.io.IOException;
 import java.time.Duration;
 
-public class MarsServerClient {
+class MarsServerClient {
 
   private static final MediaType JSON
           = MediaType.get("application/json; charset=utf-8");

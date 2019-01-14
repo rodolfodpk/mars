@@ -25,7 +25,6 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import static com.google.common.primitives.Chars.asList;
 import static com.rdpk.mars.domain.Direction.*;
 import static com.rdpk.mars.domain.MoveRoverAction.*;
 
@@ -85,7 +84,7 @@ public class MarsRestServer extends AbstractVerticle {
       }
     });
 
-    router.post("/plateaus/:plateauId/commands/create").handler(ctx -> {
+    router.post("/plateaus/:plateauId/commands/create").consumes("application/json").handler(ctx -> {
       JsonObject json = ctx.getBody().toJsonObject();
       String idParam = ctx.pathParam("plateauId");
       CreateCommand createCommand = new CreateCommand(idParam);
@@ -99,7 +98,7 @@ public class MarsRestServer extends AbstractVerticle {
               .end();
     });
 
-    router.post("/plateaus/:plateauId/commands/activate").handler(ctx -> {
+    router.post("/plateaus/:plateauId/commands/activate").consumes("application/json").handler(ctx -> {
       JsonObject json = ctx.getBody().toJsonObject();
       System.out.println(json.encodePrettily());
       String idParam = ctx.pathParam("plateauId");
@@ -113,12 +112,13 @@ public class MarsRestServer extends AbstractVerticle {
               .end();
     });
 
-    router.post("/plateaus/:plateauId/commands/move").handler(ctx -> {
+    router.post("/plateaus/:plateauId/commands/move").consumes("application/json").handler(ctx -> {
       JsonObject json = ctx.getBody().toJsonObject();
       String idParam = ctx.pathParam("plateauId");
-      List<Character> actions = asList(json.getString("actions").toCharArray());
+      String result = json.getString("actions");
+      List<Character> actions = result.chars().mapToObj(e->(char)e).collect(Collectors.toList());
       List<MoveRoverAction> domainActions = actions.stream()
-              .map(action -> translateMoveAction(action)).collect(Collectors.toList());
+              .map(this::translateMoveAction).collect(Collectors.toList());
       MoveRoverCommand command = new MoveRoverCommand(idParam, domainActions);
       commandHandler.move(command);
       ctx.response()
@@ -145,7 +145,7 @@ public class MarsRestServer extends AbstractVerticle {
     server.close();
   }
 
-  static Direction translateDirection(String character) {
+  Direction translateDirection(String character) {
     switch (character.toUpperCase()) {
       case "N":
         return NORTH;
@@ -160,7 +160,7 @@ public class MarsRestServer extends AbstractVerticle {
     }
   }
 
-  static MoveRoverAction translateMoveAction(Character character) {
+  MoveRoverAction translateMoveAction(Character character) {
     switch (character) {
       case 'L':
         return TURN_LEFT;

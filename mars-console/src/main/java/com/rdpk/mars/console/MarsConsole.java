@@ -10,15 +10,13 @@ public class MarsConsole {
     MarsServerClient client;
     Scanner scanner = new Scanner(System.in);
 
-    System.out.println("*** Welcome to Mars!");
+    System.out.println("*** Welcome to Mars! Press CRTL+C to quit");
 
     System.out.print("Enter plateau's name: ");
     String plateauName = scanner.nextLine();
     client = new MarsServerClient(plateauName);
 
-    boolean quit = false;
-
-    while(!quit) {
+    while(true) {
 
       System.out.print("Enter your command: ");
       String command = scanner.nextLine();
@@ -34,7 +32,7 @@ public class MarsConsole {
         case CREATE: System.out.println(client.create(parser.create())); break;
         case ACTIVATE: System.out.println(client.activate(parser.activate())); break;
         case MOVE: System.out.println(client.move(parser.move())); break;
-        default: quit = true; return;
+        default: System.out.println("Bye!"); return;
       }
 
     }
