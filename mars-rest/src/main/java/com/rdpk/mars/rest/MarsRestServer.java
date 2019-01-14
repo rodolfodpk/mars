@@ -74,35 +74,40 @@ public class MarsRestServer extends AbstractVerticle {
       if (plateau.isPresent()) {
         String type = ctx.request().getHeader("accept");
         switch (type) {
-          case JSON_CONTENT_TYPE: ctx.response().putHeader("content-type", JSON_CONTENT_TYPE)
-                  .end(Json.encodePrettily(plateau.get())); break;
-          case TEXT_CONTENT_TYPE: ctx.response().putHeader("content-type", TEXT_CONTENT_TYPE)
-                  .end(convert(plateau.get())); break;
-          default: ctx.response().putHeader("content-type", JSON_CONTENT_TYPE).end();
+          case JSON_CONTENT_TYPE:
+            ctx.response().putHeader("content-type", JSON_CONTENT_TYPE)
+                    .end(Json.encodePrettily(plateau.get()));
+            break;
+          case TEXT_CONTENT_TYPE:
+            ctx.response().putHeader("content-type", TEXT_CONTENT_TYPE)
+                    .end(convert(plateau.get()));
+            break;
+          default:
+            ctx.response().putHeader("content-type", JSON_CONTENT_TYPE).end();
         }
       } else {
         ctx.response()
-            .setStatusCode(404)
-            .putHeader("content-type", JSON_CONTENT_TYPE)
-            .end();
+                .setStatusCode(404)
+                .putHeader("content-type", JSON_CONTENT_TYPE)
+                .end();
       }
 
     });
 
     router.post("/plateaus/:plateauId/commands/create").consumes(JSON_CONTENT_TYPE).produces(JSON_CONTENT_TYPE)
             .handler(ctx -> {
-      JsonObject json = ctx.getBody().toJsonObject();
-      String idParam = ctx.pathParam("plateauId");
-      CreateCommand createCommand = new CreateCommand(idParam);
-      commandHandler.create(createCommand);
-      Coordinates coordinates = new Coordinates(json.getInteger("x"), json.getInteger("y"));
-      ResizeAreaCommand resizeAreaCommand = new ResizeAreaCommand(idParam, coordinates);
-      commandHandler.resize(resizeAreaCommand);
-      ctx.response()
-              .putHeader("Location", String.format("/plateaus/%s", idParam))
-              .setStatusCode(303)
-              .end();
-    });
+              JsonObject json = ctx.getBody().toJsonObject();
+              String idParam = ctx.pathParam("plateauId");
+              CreateCommand createCommand = new CreateCommand(idParam);
+              commandHandler.create(createCommand);
+              Coordinates coordinates = new Coordinates(json.getInteger("x"), json.getInteger("y"));
+              ResizeAreaCommand resizeAreaCommand = new ResizeAreaCommand(idParam, coordinates);
+              commandHandler.resize(resizeAreaCommand);
+              ctx.response()
+                      .putHeader("Location", String.format("/plateaus/%s", idParam))
+                      .setStatusCode(303)
+                      .end();
+            });
 
     router.post("/plateaus/:plateauId/commands/create").consumes(JSON_CONTENT_TYPE).produces(TEXT_CONTENT_TYPE)
             .handler(ctx -> {
@@ -121,18 +126,18 @@ public class MarsRestServer extends AbstractVerticle {
 
     router.post("/plateaus/:plateauId/commands/activate").consumes(JSON_CONTENT_TYPE).produces(JSON_CONTENT_TYPE)
             .handler(ctx -> {
-      JsonObject json = ctx.getBody().toJsonObject();
-      System.out.println(json.encodePrettily());
-      String idParam = ctx.pathParam("plateauId");
-      Coordinates target = new Coordinates(json.getInteger("x"), json.getInteger("y"));
-      Direction direction = translateDirection(json.getString("direction"));
-      ActivateRoverCommand command = new ActivateRoverCommand(idParam, target, direction);
-      commandHandler.activate(command);
-      ctx.response()
-              .putHeader("Location", String.format("/plateaus/%s", idParam))
-              .setStatusCode(303)
-              .end();
-    });
+              JsonObject json = ctx.getBody().toJsonObject();
+              System.out.println(json.encodePrettily());
+              String idParam = ctx.pathParam("plateauId");
+              Coordinates target = new Coordinates(json.getInteger("x"), json.getInteger("y"));
+              Direction direction = translateDirection(json.getString("direction"));
+              ActivateRoverCommand command = new ActivateRoverCommand(idParam, target, direction);
+              commandHandler.activate(command);
+              ctx.response()
+                      .putHeader("Location", String.format("/plateaus/%s", idParam))
+                      .setStatusCode(303)
+                      .end();
+            });
 
     router.post("/plateaus/:plateauId/commands/activate").consumes(JSON_CONTENT_TYPE).produces(TEXT_CONTENT_TYPE)
             .handler(ctx -> {
@@ -151,26 +156,26 @@ public class MarsRestServer extends AbstractVerticle {
 
     router.post("/plateaus/:plateauId/commands/move").consumes(JSON_CONTENT_TYPE).produces(JSON_CONTENT_TYPE)
             .handler(ctx -> {
-      JsonObject json = ctx.getBody().toJsonObject();
-      String idParam = ctx.pathParam("plateauId");
-      String result = json.getString("actions");
-      List<Character> actions = result.chars().mapToObj(e->(char)e).collect(Collectors.toList());
-      List<MoveRoverAction> domainActions = actions.stream()
-              .map(this::translateMoveAction).collect(Collectors.toList());
-      MoveRoverCommand command = new MoveRoverCommand(idParam, domainActions);
-      commandHandler.move(command);
-      ctx.response()
-              .putHeader("Location", String.format("/plateaus/%s", idParam))
-              .setStatusCode(303)
-              .end();
-    });
+              JsonObject json = ctx.getBody().toJsonObject();
+              String idParam = ctx.pathParam("plateauId");
+              String result = json.getString("actions");
+              List<Character> actions = result.chars().mapToObj(e -> (char) e).collect(Collectors.toList());
+              List<MoveRoverAction> domainActions = actions.stream()
+                      .map(this::translateMoveAction).collect(Collectors.toList());
+              MoveRoverCommand command = new MoveRoverCommand(idParam, domainActions);
+              commandHandler.move(command);
+              ctx.response()
+                      .putHeader("Location", String.format("/plateaus/%s", idParam))
+                      .setStatusCode(303)
+                      .end();
+            });
 
     router.post("/plateaus/:plateauId/commands/move").consumes(JSON_CONTENT_TYPE).produces(TEXT_CONTENT_TYPE)
             .handler(ctx -> {
               JsonObject json = ctx.getBody().toJsonObject();
               String idParam = ctx.pathParam("plateauId");
               String result = json.getString("actions");
-              List<Character> actions = result.chars().mapToObj(e->(char)e).collect(Collectors.toList());
+              List<Character> actions = result.chars().mapToObj(e -> (char) e).collect(Collectors.toList());
               List<MoveRoverAction> domainActions = actions.stream()
                       .map(this::translateMoveAction).collect(Collectors.toList());
               MoveRoverCommand command = new MoveRoverCommand(idParam, domainActions);
@@ -195,13 +200,13 @@ public class MarsRestServer extends AbstractVerticle {
 
   }
 
-  private String convert(PlateauReadModel plateauReadModel) {
-    return plateauReadModel.rovers.stream().map(r -> String.format("%s %s %s", r.x, r.y, r.direction))
-            .collect(Collectors.joining("\n"));
-  }
-
   public void stop() {
     server.close();
+  }
+
+  String convert(PlateauReadModel plateauReadModel) {
+    return plateauReadModel.rovers.stream().map(r -> String.format("%s %s %s", r.x, r.y, r.direction))
+            .collect(Collectors.joining("\n"));
   }
 
   Direction translateDirection(String character) {
