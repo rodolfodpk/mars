@@ -35,14 +35,12 @@ public class Plateau {
       activeRover = new Rover(generator.incrementAndGet(), location, direction);
       rovers.add(activeRover);
     }
-    System.out.println("after activate \n" + this);
   }
 
   public void move(List<MoveRoverAction> moves) {
     if (activeRover == null) {
       throw new IllegalStateException("Before moving a rover you must to activate it");
     }
-    System.out.println("before move \n" + this);
     rovers.remove(activeRover);
     moves.forEach(move -> {
       switch (move) {
@@ -58,10 +56,8 @@ public class Plateau {
         default:
           System.out.println("oops");
       }
-      System.out.println(activeRover);
     });
     rovers.add(activeRover);
-    System.out.println("after activate \n" + this);
   }
 
   boolean isLocationBusy(Coordinates newLocation) {
