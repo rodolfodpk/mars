@@ -19,7 +19,7 @@ public class MarsConsole {
     while(true) {
 
       System.out.print("Enter your command: ");
-      String command = scanner.nextLine();
+      String command = scanner.nextLine().toUpperCase();
 
       System.out.println("  -> command [" + command + "]");
 
