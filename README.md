@@ -38,23 +38,21 @@ since with Vert.x WebClient I would reach a callback hell. I didn't tried to use
 
 ## Developer notes
 
-* To run the rest app with code changes reload:
+### To run the rest app with code changes reload:
 
 ``` 
 mvn clean install
-
 cd mars-rest
-
 mvn vertx:run
 ```
 
-* Javadocs are avaliable:
+### Javadocs are avaliable:
 
 ``
 mvn javadocs:javadocs
 ``
 
 Then these access:
-[mars-core](mars-core/target/site/apidocs/index-all.html)
-[mars-rest](mars-rest/target/site/apidocs/index-all.html)
+* [mars-core](mars-core/target/site/apidocs/index-all.html)
+* [mars-rest](mars-rest/target/site/apidocs/index-all.html)
 
