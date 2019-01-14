@@ -30,7 +30,8 @@ mvn exec:java
 
 ## Random notes
 
-* Integration tests for REST app included
+* It tries CQRS but not Event Sourcing
+* Integration tests for REST app are included
 * Acceptance tests for REST app would be much easier with [JUnit 5 execution order](https://junit.org/junit5/docs/snapshot/user-guide/#writing-tests-test-execution-order)
 since with Vert.x WebClient I would reach a callback hell. I didn't tried to use the JUnit 5 snapshot.
 * I tried to use [Vertx's OpenApi contract](https://vertx.io/docs/vertx-web-api-contract/java/) but gave up since i'm not proficient with it yet. 
