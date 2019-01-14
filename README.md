@@ -52,7 +52,3 @@ mvn vertx:run
 mvn javadocs:javadocs
 ``
 
-Then these access:
-* [mars-core](mars-core/target/site/apidocs/index-all.html)
-* [mars-rest](mars-rest/target/site/apidocs/index-all.html)
-
