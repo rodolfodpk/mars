@@ -9,7 +9,11 @@ import java.time.Duration;
 class MarsServerClient {
 
   private static final MediaType JSON
-          = MediaType.get("application/json; charset=utf-8");
+          = MediaType.get("application/json");
+
+  private static final MediaType TEXT
+          = MediaType.get("plain/text");
+
   private static final String BASE_URL = "http://localhost:8080";
 
   // logger
@@ -22,7 +26,7 @@ class MarsServerClient {
 
   final String plateauId;
 
-  public MarsServerClient(String plateauId) {
+  MarsServerClient(String plateauId) {
     this.plateauId = plateauId;
   }
 
@@ -33,6 +37,7 @@ class MarsServerClient {
     Request request = new Request.Builder()
             .url(url)
             .post(body)
+            .addHeader("accept", "plain/text")
             .build();
     try (Response response = client.newCall(request).execute()) {
       return response.body().string();
@@ -47,6 +52,7 @@ class MarsServerClient {
     Request request = new Request.Builder()
             .url(url)
             .post(body)
+            .addHeader("accept", "plain/text")
             .build();
     try (Response response = client.newCall(request).execute()) {
       return response.body().string();
@@ -60,6 +66,7 @@ class MarsServerClient {
     Request request = new Request.Builder()
             .url(url)
             .post(body)
+            .addHeader("accept", "plain/text")
             .build();
     try (Response response = client.newCall(request).execute()) {
       return response.body().string();

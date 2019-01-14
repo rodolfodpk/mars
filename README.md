@@ -39,7 +39,7 @@ since with Vert.x WebClient I would reach a callback hell. I didn't tried to use
 * Error and complex cases are probably still untested (only happy ending scenarios are tested so far)
 * Sometimes I really was not careful with commit messages 
 * Core and Rest modules has reasonable test coverage but Console is missing a lot.
-* Console app output is still in JSON format. More work is needed to render the text format required by the challenge. And I just realized REST app could generate responses with the text content-type instead of json
+* ~~Console app output is still in JSON format. More work is needed to render the text format required by the challenge. And I just realized REST app could generate responses with the text content-type instead of json~~. *update* text media type added. 
 ## Developer notes
 
 ### To run the rest app with code changes reload:

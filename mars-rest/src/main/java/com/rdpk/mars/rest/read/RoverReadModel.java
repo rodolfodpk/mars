@@ -1,6 +1,6 @@
 package com.rdpk.mars.rest.read;
 
-class RoverReadModel {
+public class RoverReadModel {
 
   public final int id;
   public final int x;

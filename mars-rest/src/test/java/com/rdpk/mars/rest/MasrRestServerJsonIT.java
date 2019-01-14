@@ -28,13 +28,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import static com.rdpk.mars.domain.Direction.EAST;
 import static com.rdpk.mars.domain.Direction.NORTH;
 import static com.rdpk.mars.domain.MoveRoverAction.*;
+import static com.rdpk.mars.rest.MarsRestServer.JSON_CONTENT_TYPE;
+import static com.rdpk.mars.rest.MarsRestServer.TEXT_CONTENT_TYPE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(VertxExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class MasrRestServerIT {
+class MasrRestServerJsonIT {
 
   static MarsRestServer verticle;
   static WebClient client;
@@ -94,39 +96,68 @@ class MasrRestServerIT {
             "\"direction\":\"N\"},{\"id\":2,\"x\":5,\"y\":1,\"direction\":\"E\"}],\"activeRover\":{\"" +
             "id\":2,\"x\":5,\"y\":1,\"direction\":\"E\"}}]";
     client
-            .get(MarsRestServer.httpPort, HOST, "/plateaus")
-            .expect(ResponsePredicate.SC_SUCCESS)
-            .expect(ResponsePredicate.JSON)
-            .send(tc.succeeding(response -> tc.verify(() -> {
-                      JsonArray array = response.bodyAsJsonArray();
-                      assertThat(1).isEqualTo(array.size());
-                      String received = array.toString();
-                      assertThat(expected1).isEqualTo(received);
-                      tc.completeNow();
-                    })
-                    )
-            );
+      .get(MarsRestServer.httpPort, HOST, "/plateaus")
+      .as(BodyCodec.jsonArray())
+      .expect(ResponsePredicate.SC_SUCCESS)
+      .expect(ResponsePredicate.JSON)
+      .putHeader("accept", JSON_CONTENT_TYPE)
+      .send(tc.succeeding(response -> tc.verify(() -> {
+              JsonArray array = response.body();
+              assertThat(1).isEqualTo(array.size());
+              String received = array.toString();
+              assertThat(expected1).isEqualTo(received);
+              tc.completeNow();
+            })
+          )
+      );
   }
 
-  @DisplayName("when calling GET /plateaus/teste1 with a valid plateau then it will return the plateau")
+  @DisplayName("when calling GET /plateaus/teste1 with a valid plateau then it will return the plateau as JSON")
   @Test
   void a2(VertxTestContext tc) {
     Plateau plateau = new Plateau("teste1");
     plateau.resize(new Coordinates(5, 5));
     storage.put(plateau.name, plateau);
     client
-            .get(MarsRestServer.httpPort, HOST, "/plateaus/teste1")
-            .expect(ResponsePredicate.SC_SUCCESS)
-            .expect(ResponsePredicate.JSON)
-            .as(BodyCodec.jsonObject())
-            .send(tc.succeeding(response -> tc.verify(() -> {
-                      JsonObject expected = new JsonObject().put("id", "teste1").put("x", 5).put("y", 5)
-                              .put("rovers", emptyList()).putNull("activeRover");
-                      assertThat(response.body()).isEqualTo(expected);
-                      tc.completeNow();
-                    })
-                    )
-            );
+      .get(MarsRestServer.httpPort, HOST, "/plateaus/teste1")
+      .as(BodyCodec.jsonObject())
+      .expect(ResponsePredicate.SC_SUCCESS)
+      .expect(ResponsePredicate.JSON)
+      .putHeader("accept", JSON_CONTENT_TYPE)
+      .send(tc.succeeding(response -> tc.verify(() -> {
+                JsonObject expected = new JsonObject().put("id", "teste1").put("x", 5).put("y", 5)
+                        .put("rovers", emptyList()).putNull("activeRover");
+                assertThat(response.body()).isEqualTo(expected);
+                tc.completeNow();
+              })
+            )
+      );
+  }
+
+  @DisplayName("when calling GET /plateaus/teste1 with a valid plateau then it will return the plateau as TEXT")
+  @Test
+  void a20(VertxTestContext tc) {
+    Plateau plateau = new Plateau("teste1");
+    plateau.resize(new Coordinates(5, 5));
+    // rover 1
+    plateau.activate(new Coordinates(1, 2), NORTH);
+    plateau.move(asList(TURN_LEFT, WALK, TURN_LEFT, WALK, TURN_LEFT, WALK, TURN_LEFT, WALK, WALK));
+    // rover 2
+    plateau.activate(new Coordinates(3, 3), EAST);
+    plateau.move(asList(WALK, WALK, TURN_RIGHT, WALK, WALK, TURN_RIGHT, WALK, TURN_RIGHT, TURN_RIGHT, WALK));
+    storage.put(plateau.name, plateau);
+    client
+      .get(MarsRestServer.httpPort, HOST, "/plateaus/teste1")
+      .as(BodyCodec.string())
+      .putHeader("accept", TEXT_CONTENT_TYPE)
+      .expect(ResponsePredicate.SC_SUCCESS)
+      .send(tc.succeeding(response -> tc.verify(() -> {
+            String expected = "1 3 N\n5 1 E";
+            assertThat(response.body()).isEqualTo(expected);
+            tc.completeNow();
+          })
+        )
+      );
   }
 
   @DisplayName("when calling GET /plateaus/p0 with a missing plateau then it will return 404")
@@ -134,14 +165,15 @@ class MasrRestServerIT {
   void a21(VertxTestContext tc) {
     storage.clear();
     client
-            .get(MarsRestServer.httpPort, HOST, "/plateaus/p0")
-            .expect(ResponsePredicate.SC_NOT_FOUND)
-            .send(tc.succeeding(response -> tc.verify(() -> {
-                      assertThat(response.body()).isNull();
-                      tc.completeNow();
-                    })
-                    )
-            );
+      .get(MarsRestServer.httpPort, HOST, "/plateaus/p0")
+      .expect(ResponsePredicate.SC_NOT_FOUND)
+      .putHeader("accept", JSON_CONTENT_TYPE)
+      .send(tc.succeeding(response -> tc.verify(() -> {
+                assertThat(response.body()).isNull();
+                tc.completeNow();
+              })
+            )
+      );
   }
 
   @DisplayName("when calling POST /plateaus/p1/commands/create then it will issue a GET /plateaus/p1")
@@ -150,18 +182,19 @@ class MasrRestServerIT {
     storage.clear();
     JsonObject request = new JsonObject().put("x", 1).put("y", 2);
     client
-            .post(MarsRestServer.httpPort, HOST, "/plateaus/p1/commands/create")
-            .as(BodyCodec.jsonObject())
-            .expect(ResponsePredicate.SC_SUCCESS)
-            .expect(ResponsePredicate.JSON)
-            .sendJson(request, tc.succeeding(response -> tc.verify(() -> {
-                      JsonObject expected = new JsonObject().put("id", "p1").put("x", 1).put("y", 2)
-                              .put("rovers", emptyList()).putNull("activeRover");
-                      assertThat(response.body()).isEqualTo(expected);
-                      tc.completeNow();
-                    })
-                    )
-            );
+      .post(MarsRestServer.httpPort, HOST, "/plateaus/p1/commands/create")
+      .as(BodyCodec.jsonObject())
+      .expect(ResponsePredicate.SC_SUCCESS)
+      .expect(ResponsePredicate.JSON)
+      .putHeader("accept", JSON_CONTENT_TYPE)
+      .sendJson(request, tc.succeeding(response -> tc.verify(() -> {
+                JsonObject expected = new JsonObject().put("id", "p1").put("x", 1).put("y", 2)
+                        .put("rovers", emptyList()).putNull("activeRover");
+                assertThat(response.body()).isEqualTo(expected);
+                tc.completeNow();
+              })
+            )
+      );
   }
 
   @DisplayName("when calling POST /plateaus/p1/commands/activate then it will issue a GET /plateaus/p1")
@@ -173,18 +206,19 @@ class MasrRestServerIT {
     storage.put(plateau.name, plateau);
     JsonObject request = new JsonObject().put("x", 1).put("y", 2).put("direction", "N");
     client
-            .post(MarsRestServer.httpPort, HOST, "/plateaus/p1/commands/activate")
-            .as(BodyCodec.jsonObject())
-            .expect(ResponsePredicate.SC_SUCCESS)
-            .expect(ResponsePredicate.JSON)
-            .sendJson(request, tc.succeeding(response -> tc.verify(() -> {
-                      String expected = "{\"id\":\"p1\",\"x\":5,\"y\":5,\"rovers\":[{\"id\":1,\"x\":1,\"y\":2," +
-                              "\"direction\":\"N\"}],\"activeRover\":{\"id\":1,\"x\":1,\"y\":2,\"direction\":\"N\"}}";
-                      assertThat(response.body().encode()).isEqualTo(expected);
-                      tc.completeNow();
-                    })
-                    )
-            );
+      .post(MarsRestServer.httpPort, HOST, "/plateaus/p1/commands/activate")
+      .as(BodyCodec.jsonObject())
+      .expect(ResponsePredicate.SC_SUCCESS)
+      .expect(ResponsePredicate.JSON)
+      .putHeader("accept", JSON_CONTENT_TYPE)
+      .sendJson(request, tc.succeeding(response -> tc.verify(() -> {
+                String expected = "{\"id\":\"p1\",\"x\":5,\"y\":5,\"rovers\":[{\"id\":1,\"x\":1,\"y\":2," +
+                        "\"direction\":\"N\"}],\"activeRover\":{\"id\":1,\"x\":1,\"y\":2,\"direction\":\"N\"}}";
+                assertThat(response.body().encode()).isEqualTo(expected);
+                tc.completeNow();
+              })
+            )
+      );
   }
 
   @DisplayName("when calling POST /plateaus/p1/commands/move then it will issue a GET /plateaus/p1")
@@ -199,18 +233,19 @@ class MasrRestServerIT {
     storage.put(plateau.name, plateau);
     JsonObject request = new JsonObject().put("actions", "LMLMLMLMM");
     client
-            .post(MarsRestServer.httpPort, HOST, "/plateaus/p1/commands/move")
-            .as(BodyCodec.jsonObject())
-            .expect(ResponsePredicate.SC_SUCCESS)
-            .expect(ResponsePredicate.JSON)
-            .sendJson(request, tc.succeeding(response -> tc.verify(() -> {
-                      String expected = "{\"id\":\"p1\",\"x\":5,\"y\":5,\"rovers\":[{\"id\":1,\"x\":1,\"y\":3," +
-                              "\"direction\":\"N\"}],\"activeRover\":{\"id\":1,\"x\":1,\"y\":3,\"direction\":\"N\"}}";
-                      assertThat(response.body().encode()).isEqualTo(expected);
-                      tc.completeNow();
-                    })
-                    )
-            );
+      .post(MarsRestServer.httpPort, HOST, "/plateaus/p1/commands/move")
+      .as(BodyCodec.jsonObject())
+      .expect(ResponsePredicate.SC_SUCCESS)
+      .expect(ResponsePredicate.JSON)
+      .putHeader("accept", JSON_CONTENT_TYPE)
+      .sendJson(request, tc.succeeding(response -> tc.verify(() -> {
+                String expected = "{\"id\":\"p1\",\"x\":5,\"y\":5,\"rovers\":[{\"id\":1,\"x\":1,\"y\":3," +
+                        "\"direction\":\"N\"}],\"activeRover\":{\"id\":1,\"x\":1,\"y\":3,\"direction\":\"N\"}}";
+                assertThat(response.body().encode()).isEqualTo(expected);
+                tc.completeNow();
+              })
+            )
+      );
   }
 
 }
