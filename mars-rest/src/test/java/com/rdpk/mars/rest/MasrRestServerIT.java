@@ -178,8 +178,8 @@ class MasrRestServerIT {
             .expect(ResponsePredicate.SC_SUCCESS)
             .expect(ResponsePredicate.JSON)
             .sendJson(request, tc.succeeding(response -> tc.verify(() -> {
-                      String expected = "{\"id\":\"p1\",\"x\":5,\"y\":5,\"rovers\":[{\"id\":1,\"x\":1,\"y\":2,\"direction\":\"N\"}]," +
-                              "\"activeRover\":{\"id\":1,\"x\":1,\"y\":2,\"direction\":\"N\"}}";
+                      String expected = "{\"id\":\"p1\",\"x\":5,\"y\":5,\"rovers\":[{\"id\":1,\"x\":1,\"y\":2," +
+                              "\"direction\":\"N\"}],\"activeRover\":{\"id\":1,\"x\":1,\"y\":2,\"direction\":\"N\"}}";
                       assertThat(response.body().encode()).isEqualTo(expected);
                       tc.completeNow();
                     })
