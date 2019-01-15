@@ -134,31 +134,6 @@ class MasrRestServerJsonIT {
       );
   }
 
-  @DisplayName("when calling GET /plateaus/teste1 with a valid plateau then it will return the plateau as TEXT")
-  @Test
-  void a20(VertxTestContext tc) {
-    Plateau plateau = new Plateau("teste1");
-    plateau.resize(new Coordinates(5, 5));
-    // rover 1
-    plateau.activate(new Coordinates(1, 2), NORTH);
-    plateau.move(asList(TURN_LEFT, WALK, TURN_LEFT, WALK, TURN_LEFT, WALK, TURN_LEFT, WALK, WALK));
-    // rover 2
-    plateau.activate(new Coordinates(3, 3), EAST);
-    plateau.move(asList(WALK, WALK, TURN_RIGHT, WALK, WALK, TURN_RIGHT, WALK, TURN_RIGHT, TURN_RIGHT, WALK));
-    storage.put(plateau.name, plateau);
-    client
-      .get(MarsRestServer.httpPort, HOST, "/plateaus/teste1")
-      .as(BodyCodec.string())
-      .putHeader("accept", TEXT_CONTENT_TYPE)
-      .expect(ResponsePredicate.SC_SUCCESS)
-      .send(tc.succeeding(response -> tc.verify(() -> {
-            String expected = "1 3 N\n5 1 E";
-            assertThat(response.body()).isEqualTo(expected);
-            tc.completeNow();
-          })
-        )
-      );
-  }
 
   @DisplayName("when calling GET /plateaus/p0 with a missing plateau then it will return 404")
   @Test

@@ -91,7 +91,6 @@ public class MarsRestServer extends AbstractVerticle {
                 .putHeader("content-type", JSON_CONTENT_TYPE)
                 .end();
       }
-
     });
 
     router.post("/plateaus/:plateauId/commands/create").consumes(JSON_CONTENT_TYPE)
