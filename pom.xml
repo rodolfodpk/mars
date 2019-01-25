@@ -213,6 +213,10 @@
                             <packages>com.rdpk.mars.rest</packages>
                         </group>
                         <group>
+                            <title>Console app</title>
+                            <packages>com.rdpk.mars.console</packages>
+                        </group>
+                        <group>
                             <title>Command model</title>
                             <packages>com.rdpk.mars.rest.command</packages>
                         </group>
