@@ -25,13 +25,10 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import static com.rdpk.mars.domain.Direction.*;
-import static com.rdpk.mars.domain.MoveRoverAction.*;
-
 public class MarsRestServer extends AbstractVerticle {
 
-  public static final String JSON_CONTENT_TYPE = "application/json";
-  public static final String TEXT_CONTENT_TYPE = "plain/text";
+  static final String JSON_CONTENT_TYPE = "application/json";
+  static final String TEXT_CONTENT_TYPE = "plain/text";
 
   static Integer httpPort = 8080;
   static HttpServer server;
@@ -41,18 +38,21 @@ public class MarsRestServer extends AbstractVerticle {
   final ConcurrentHashMap<String, Plateau> storage;
   final PlateauCommandHandler commandHandler;
   final PlateauReadRepository repository;
+  final ModelTranslator modelTranslator;
 
   MarsRestServer(ConcurrentHashMap<String, Plateau> storage, PlateauCommandHandler commandHandler,
-                 PlateauReadRepository repository) {
+                 PlateauReadRepository repository, ModelTranslator modelTranslator) {
     this.storage = storage;
     this.commandHandler = commandHandler;
     this.repository = repository;
+    this.modelTranslator = modelTranslator;
   }
 
   public MarsRestServer() {
     storage = new ConcurrentHashMap<>();
     commandHandler = new PlateauCommandHandler(new PlateauRepository(storage));
     repository = new PlateauReadRepository(storage);
+    modelTranslator = new ModelTranslator();
   }
 
   public void start(Future future) {
@@ -80,7 +80,7 @@ public class MarsRestServer extends AbstractVerticle {
             break;
           case TEXT_CONTENT_TYPE:
             ctx.response().putHeader("content-type", TEXT_CONTENT_TYPE)
-                    .end(convert(plateau.get()));
+                    .end(modelTranslator.convert(plateau.get()));
             break;
           default:
             ctx.response().putHeader("content-type", JSON_CONTENT_TYPE).end();
@@ -113,10 +113,9 @@ public class MarsRestServer extends AbstractVerticle {
     router.post("/plateaus/:plateauId/commands/activate").consumes(JSON_CONTENT_TYPE)
             .handler(ctx -> {
               JsonObject json = ctx.getBody().toJsonObject();
-              System.out.println(json.encodePrettily());
               String idParam = ctx.pathParam("plateauId");
               Coordinates target = new Coordinates(json.getInteger("x"), json.getInteger("y"));
-              Direction direction = translateDirection(json.getString("direction"));
+              Direction direction = modelTranslator.convert(json.getString("direction"));
               ActivateRoverCommand command = new ActivateRoverCommand(idParam, target, direction);
               commandHandler.activate(command);
               String type = ctx.request().getHeader("accept");
@@ -134,7 +133,7 @@ public class MarsRestServer extends AbstractVerticle {
               String result = json.getString("actions");
               List<Character> actions = result.chars().mapToObj(e -> (char) e).collect(Collectors.toList());
               List<MoveRoverAction> domainActions = actions.stream()
-                      .map(this::translateMoveAction).collect(Collectors.toList());
+                      .map(modelTranslator::convert).collect(Collectors.toList());
               MoveRoverCommand command = new MoveRoverCommand(idParam, domainActions);
               commandHandler.move(command);
               String type = ctx.request().getHeader("accept");
@@ -163,38 +162,6 @@ public class MarsRestServer extends AbstractVerticle {
     server.close();
   }
 
-  private String convert(PlateauReadModel plateauReadModel) {
-    return plateauReadModel.rovers.stream().map(r -> String.format("%s %s %s", r.x, r.y, r.direction))
-            .collect(Collectors.joining("\n"));
-  }
-
-  private Direction translateDirection(String character) {
-    switch (character.toUpperCase()) {
-      case "N":
-        return NORTH;
-      case "S":
-        return SOUTH;
-      case "E":
-        return EAST;
-      case "W":
-        return WEST;
-      default:
-        return null;
-    }
-  }
-
-  private MoveRoverAction translateMoveAction(Character character) {
-    switch (character) {
-      case 'L':
-        return TURN_LEFT;
-      case 'R':
-        return TURN_RIGHT;
-      case 'M':
-        return WALK;
-      default:
-        return null;
-    }
-  }
 
   // Convenience method so you can run it in your IDE
   public static void main(String[] args) {

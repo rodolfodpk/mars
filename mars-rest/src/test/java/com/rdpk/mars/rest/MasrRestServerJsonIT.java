@@ -60,8 +60,9 @@ class MasrRestServerJsonIT {
     storage = new ConcurrentHashMap<>();
     PlateauCommandHandler commandHandler = new PlateauCommandHandler(new PlateauRepository(storage));
     PlateauReadRepository repository = new PlateauReadRepository(storage);
+    ModelTranslator translator = new ModelTranslator();
 
-    verticle = new MarsRestServer(storage, commandHandler, repository);
+    verticle = new MarsRestServer(storage, commandHandler, repository, translator);
 
     System.out.println("will try to get an avaliable port");
     MarsRestServer.httpPort = httpPort();
