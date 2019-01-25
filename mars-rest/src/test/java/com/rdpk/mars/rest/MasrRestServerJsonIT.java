@@ -29,7 +29,6 @@ import static com.rdpk.mars.domain.Direction.EAST;
 import static com.rdpk.mars.domain.Direction.NORTH;
 import static com.rdpk.mars.domain.MoveRoverAction.*;
 import static com.rdpk.mars.rest.MarsRestServer.JSON_CONTENT_TYPE;
-import static com.rdpk.mars.rest.MarsRestServer.TEXT_CONTENT_TYPE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
