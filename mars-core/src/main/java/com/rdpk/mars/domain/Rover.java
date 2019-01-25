@@ -22,10 +22,6 @@ public class Rover {
     return id;
   }
 
-  public Coordinates getLocation() {
-    return location;
-  }
-
   /**
    * Turn to left
    */

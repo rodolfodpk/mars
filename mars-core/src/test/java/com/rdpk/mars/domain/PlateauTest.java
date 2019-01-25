@@ -69,7 +69,7 @@ class PlateauTest {
   }
 
   @Test
-  @DisplayName("when activating a already landed rover, it will be activated")
+  @DisplayName("when activating a previously landed rover, it will be activated")
   void a6() {
     plateau.activate(new Coordinates(1, 1), Direction.NORTH);
     Rover rover1 = plateau.activeRover;

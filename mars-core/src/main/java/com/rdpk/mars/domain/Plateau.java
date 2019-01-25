@@ -28,7 +28,7 @@ public class Plateau {
     if (location.isBiggerThan(topRight)) {
       throw new IllegalArgumentException(String.format("Location %s is not within %s", location, topRight));
     }
-    Optional<Rover> target = rovers.stream().filter(rover -> rover.location.equals(location)).findFirst();
+    Optional<Rover> target = roverAtLocation(location);
     if (target.isPresent()) {
       activeRover = target.get();
     } else {
