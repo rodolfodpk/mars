@@ -76,6 +76,7 @@ class PlateauTest {
     plateau.activate(new Coordinates(2, 2), Direction.NORTH);
     plateau.activate(new Coordinates(1, 1), Direction.NORTH);
     assertThat(plateau.activeRover).isEqualTo(rover1);
+    assertThat(plateau.rovers.size()).isEqualTo(2);
   }
 
 

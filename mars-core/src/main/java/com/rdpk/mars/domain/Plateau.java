@@ -28,13 +28,8 @@ public class Plateau {
     if (location.isBiggerThan(topRight)) {
       throw new IllegalArgumentException(String.format("Location %s is not within %s", location, topRight));
     }
-    Optional<Rover> target = roverAtLocation(location);
-    if (target.isPresent()) {
-      activeRover = target.get();
-    } else {
-      activeRover = new Rover(generator.incrementAndGet(), location, direction);
-      rovers.add(activeRover);
-    }
+    activeRover = roverAtLocation(location).orElse(new Rover(generator.incrementAndGet(), location, direction));
+    rovers.add(activeRover);
   }
 
   public void move(List<MoveRoverAction> moves) {
