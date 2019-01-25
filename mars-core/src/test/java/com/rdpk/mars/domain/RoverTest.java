@@ -24,13 +24,15 @@ class RoverTest {
   @BeforeAll
   static void setUp() {
     rover = new Rover(1, new Coordinates(1, 1), NORTH);
+    plateau = new Plateau("test-2");
+    plateau.resize(new Coordinates(5, 5));
+    plateau.activate(rover.location, rover.direction);
+
     directionsByName = new HashMap<>();
     directionsByName.put("NORTH", NORTH);
     directionsByName.put("SOUTH", SOUTH);
     directionsByName.put("EAST", EAST);
     directionsByName.put("WEST", WEST);
-    plateau = new Plateau("test-2");
-    plateau.resize(new Coordinates(5, 5));
   }
 
   @DisplayName("it can turn to left")
@@ -96,23 +98,22 @@ class RoverTest {
   @DisplayName("when it may collide with another rover, it cannot move")
   @Test
   void a9() {
-    rover.location = new Coordinates(1, 1);
-    rover.direction = NORTH;
-    plateau.resize(new Coordinates(5, 5));
-    plateau.activate(new Coordinates(1, 2), EAST);
-    assertThrows(IllegalStateException.class, () -> rover.moveForward(plateau));
-    assertThat(rover.direction).isEqualTo(NORTH);
-    assertThat(rover.location).isEqualTo(new Coordinates(1, 1));
+    plateau.rovers.clear();
+    plateau.activeRover = null;
+    plateau.resize(new Coordinates(1, 1));
+    plateau.activate(new Coordinates(0, 1), NORTH);
+    plateau.activate(new Coordinates(0, 0), NORTH);
+    assertThrows(IllegalStateException.class, () -> plateau.activeRover.moveForward(plateau));
   }
 
   @DisplayName("when it may get outside of the plateau, it cannot move")
   @Test
   void a10() {
-    rover.location = new Coordinates(1, 1);
-    rover.direction = NORTH;
+    plateau.rovers.clear();
+    plateau.activeRover = null;
     plateau.resize(new Coordinates(1, 1));
-    assertThrows(IllegalStateException.class, () -> rover.moveForward(plateau));
-    assertThat(rover.direction).isEqualTo(NORTH);
-    assertThat(rover.location).isEqualTo(new Coordinates(1, 1));
+    plateau.activate(new Coordinates(0, 1), NORTH);
+    assertThrows(IllegalStateException.class, () -> plateau.activeRover.moveForward(plateau));
   }
+
 }

@@ -13,7 +13,7 @@ public class Plateau {
 
   public final String name;
   public Coordinates topRight;
-  public SortedSet<Rover> rovers = new TreeSet<>(Comparator.comparing(Rover::toString));
+  public SortedSet<Rover> rovers = new TreeSet<>(Comparator.comparing(Rover::getId));
   public Rover activeRover;
 
   public Plateau(String name) {
@@ -41,7 +41,6 @@ public class Plateau {
     if (activeRover == null) {
       throw new IllegalStateException("Before moving a rover you must to activate it");
     }
-    rovers.remove(activeRover);
     moves.forEach(move -> {
       switch (move) {
         case WALK:
@@ -54,31 +53,17 @@ public class Plateau {
           activeRover.turnToRight();
           break;
         default:
-          System.out.println("oops");
       }
     });
-    rovers.add(activeRover);
   }
 
-  boolean isLocationBusy(Coordinates newLocation) {
-    return rovers.stream().anyMatch(rover -> rover.location.equals(newLocation));
+  Optional<Rover> roverAtLocation(Coordinates newLocation) {
+    return rovers.stream()
+            .filter(rover -> rover.location.equals(newLocation)).findFirst();
   }
 
   boolean isUnknownLocation(Coordinates newLocation) {
     return newLocation.isBiggerThan(topRight);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    Plateau plateau = (Plateau) o;
-    return name.equals(plateau.name);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(name);
   }
 
   @Override

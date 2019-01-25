@@ -44,10 +44,11 @@ class PlateauTest {
   void a2() {
     Coordinates target = new Coordinates(1, 1);
     plateau.activate(target, Direction.NORTH);
+    Rover rover = new Rover(1, target, Direction.NORTH);
     assertThat(plateau.activeRover.location).isEqualTo(target);
     assertThat(plateau.rovers.size()).isEqualTo(1);
-    assertThat(plateau.rovers.contains(new Rover(1, target, Direction.NORTH))).isTrue();
-    assertThat(plateau.isLocationBusy(target)).isTrue();
+    assertThat(plateau.rovers.contains(rover)).isTrue();
+    assertThat(plateau.roverAtLocation(target).get()).isEqualTo(rover);
   }
 
   @Test
@@ -64,7 +65,17 @@ class PlateauTest {
     plateau.move(singletonList(MoveRoverAction.WALK));
     Coordinates afterStep = new Coordinates(1, 2);
     assertThat(plateau.activeRover.location).isEqualTo(afterStep);
-    assertThat(plateau.isLocationBusy(afterStep)).isTrue();
+    assertThat(plateau.roverAtLocation(afterStep).get()).isEqualTo(plateau.activeRover);
+  }
+
+  @Test
+  @DisplayName("when activating a already landed rover, it will be activated")
+  void a6() {
+    plateau.activate(new Coordinates(1, 1), Direction.NORTH);
+    Rover rover1 = plateau.activeRover;
+    plateau.activate(new Coordinates(2, 2), Direction.NORTH);
+    plateau.activate(new Coordinates(1, 1), Direction.NORTH);
+    assertThat(plateau.activeRover).isEqualTo(rover1);
   }
 
 

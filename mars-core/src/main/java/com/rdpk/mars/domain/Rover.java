@@ -1,11 +1,12 @@
 package com.rdpk.mars.domain;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Rover to explore Mars plateaus
  */
-public class Rover implements Comparable<Rover> {
+public class Rover {
 
   public final Integer id;
   public Coordinates location;
@@ -15,6 +16,14 @@ public class Rover implements Comparable<Rover> {
     this.id = id;
     this.location = location;
     this.direction = direction;
+  }
+
+  public Integer getId() {
+    return id;
+  }
+
+  public Coordinates getLocation() {
+    return location;
   }
 
   /**
@@ -35,7 +44,6 @@ public class Rover implements Comparable<Rover> {
         direction = Direction.SOUTH;
         break;
       default:
-        System.out.println("oops");
     }
   }
 
@@ -57,7 +65,6 @@ public class Rover implements Comparable<Rover> {
         direction = Direction.NORTH;
         break;
       default:
-        System.out.println("oops");
     }
   }
 
@@ -82,11 +89,13 @@ public class Rover implements Comparable<Rover> {
         newLocation = new Coordinates(location.x - 1, location.y);
         break;
       default:
-        System.out.println("oops");
     }
 
-    if (plateau.isLocationBusy(newLocation)) {
-      throw new IllegalStateException(String.format("new location [%s] is already occupied", newLocation));
+    Optional<Rover> roverAtLocation = plateau.roverAtLocation(newLocation);
+
+    if (roverAtLocation.isPresent() && !this.equals(roverAtLocation.get())) {
+        throw new IllegalStateException(
+            String.format("new location [%s] is already occupied by rover [%s]", newLocation, roverAtLocation.get()));
     }
 
     if (plateau.isUnknownLocation(newLocation)) {
@@ -95,12 +104,6 @@ public class Rover implements Comparable<Rover> {
 
     location = newLocation;
 
-  }
-
-
-  @Override
-  public int compareTo(Rover rover) {
-    return rover.id.compareTo(this.id);
   }
 
   @Override
