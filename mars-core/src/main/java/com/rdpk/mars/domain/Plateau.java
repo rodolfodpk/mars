@@ -25,7 +25,7 @@ public class Plateau {
   }
 
   public void activate(Coordinates location, Direction direction) {
-    if (location.isBiggerThan(topRight)) {
+    if (location.hasAnyAxisBiggerThan(topRight)) {
       throw new IllegalArgumentException(String.format("Location %s is not within %s", location, topRight));
     }
     activeRover = roverAtLocation(location).orElse(new Rover(generator.incrementAndGet(), location, direction));
@@ -53,12 +53,11 @@ public class Plateau {
   }
 
   Optional<Rover> roverAtLocation(Coordinates newLocation) {
-    return rovers.stream()
-            .filter(rover -> rover.location.equals(newLocation)).findFirst();
+    return rovers.stream().filter(rover -> rover.location.equals(newLocation)).findFirst();
   }
 
   boolean isUnknownLocation(Coordinates newLocation) {
-    return newLocation.isBiggerThan(topRight);
+    return newLocation.hasAnyAxisBiggerThan(topRight);
   }
 
   @Override

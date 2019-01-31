@@ -18,27 +18,27 @@ class CoordinatesTest {
   @DisplayName("6,6 is bigger than 5,5")
   void a2() {
     Coordinates topRight = new Coordinates(5, 5);
-    assertThat(topRight.isBiggerThan(new Coordinates(6, 6))).isFalse();
+    assertThat(topRight.hasAnyAxisBiggerThan(new Coordinates(6, 6))).isFalse();
   }
 
   @Test
   @DisplayName("4,5 is bigger than 4,4")
   void a3() {
     Coordinates topRight = new Coordinates(4, 5);
-    assertThat(topRight.isBiggerThan(new Coordinates(4, 4))).isTrue();
+    assertThat(topRight.hasAnyAxisBiggerThan(new Coordinates(4, 4))).isTrue();
   }
 
   @Test
   @DisplayName("3,5 is bigger than 4,4")
   void a4() {
     Coordinates topRight = new Coordinates(3, 5);
-    assertThat(topRight.isBiggerThan(new Coordinates(4, 4))).isTrue();
+    assertThat(topRight.hasAnyAxisBiggerThan(new Coordinates(4, 4))).isTrue();
   }
 
   @Test
   @DisplayName("3,4 is not bigger than 4,4")
   void a5() {
     Coordinates topRight = new Coordinates(3, 4);
-    assertThat(topRight.isBiggerThan(new Coordinates(4, 4))).isFalse();
+    assertThat(topRight.hasAnyAxisBiggerThan(new Coordinates(4, 4))).isFalse();
   }
 }

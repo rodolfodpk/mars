@@ -112,7 +112,7 @@ class MasrRestServerJsonIT {
       );
   }
 
-  @DisplayName("when calling GET /plateaus/teste1 with a valid plateau then it will return the plateau as JSON")
+  @DisplayName("when calling GET /plateaus/teste1 with a valid plateau then it will return the plateau")
   @Test
   void a2(VertxTestContext tc) {
     Plateau plateau = new Plateau("teste1");

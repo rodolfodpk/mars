@@ -19,7 +19,7 @@ public class Coordinates {
     this.y = y;
   }
 
-  boolean isBiggerThan(Coordinates coordinates) {
+  boolean hasAnyAxisBiggerThan(Coordinates coordinates) {
     return x > coordinates.x || y > coordinates.y;
   }
 
